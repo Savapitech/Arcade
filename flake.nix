@@ -20,6 +20,7 @@
           gcovr
           criterion
           clang
+          sfml
         ];
       };
     });
