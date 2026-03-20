@@ -15,10 +15,10 @@ namespace game {
         arc::Vec2 _curCoord;
       public:
         entity(const std::string name, const std::string path, const std::string pathCli, size_t x, size_t y);
-        const float getCurx() const { return _curCoord.x; }
-        const float getCury() const { return _curCoord.y; }
-        const float getStartx() const { return _startCoord.x; }
-        const float getStarty() const { return _startCoord.y; }
+        float getCurx() const { return _curCoord.x; }
+        float getCury() const { return _curCoord.y; }
+        float getStartx() const { return _startCoord.x; }
+        float getStarty() const { return _startCoord.y; }
         const std::string getPame() const { return _name; }
         const std::string getPath() const { return _path; }
         void setCurx(float x) { _curCoord.x = x; } 
