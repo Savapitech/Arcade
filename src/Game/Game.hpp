@@ -1,22 +1,28 @@
 #pragma once
 
+#include <vector>
+
 #include "Entity.hpp"
 #include "Text.hpp"
-#include <vector>
 
 namespace game {
 
 class IGame {
 public:
-  virtual const std::vector<Entity> &get() const = 0;
+  virtual const std::vector<Entity> &getEntities() const = 0;
+  virtual void initGame() = 0;
+  virtual void stopGame() = 0;
 };
 
 class AGame : public IGame {
 protected:
+  bool _running = false;
+  size_t _tick;
   std::vector<game::Entity> _entities;
   std::vector<game::Text> _texts;
 
 public:
-  const std::vector<game::Entity> &get() const { return _entity; }
+  const std::vector<game::Entity> &getEntities() const { return _entities; }
+  void stopGame() { _running = false; }
 };
 } // namespace game
