@@ -9,9 +9,9 @@ int main(int ac, char **av) {
     return std::cerr << "Usage ./arcade lib.so" << std::endl, FAILURE;
 
   try {
-    std::cout << "arcade in progress" << std::endl; 
+    std::cout << "arcade in progress" << std::endl;
   } catch (const std::exception &e) {
-      return std::cerr << e.what() << std::endl, FAILURE
+    return std::cerr << e.what() << std::endl, FAILURE
   }
   return SUCCESS;
 }

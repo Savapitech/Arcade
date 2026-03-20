@@ -50,10 +50,8 @@ tests: $(NAME_test)
 	@ bash tests/run_all.sh
 
 format:
-	@ find src/ -name "*.cpp" -type f -exec clang-format -i {} ";"
-	@ find src/ -name "*.hpp" -type f -exec clang-format -i {} ";"
-	@ find tests/ -name "*.cpp" -type f -exec clang-format -i {} ";"
-	@ find tests/ -name "*.hpp" -type f -exec clang-format -i {} ";"
+	@ find ./ -name "*.cpp" -type f -exec clang-format -i {} ";"
+	@ find ./ -name "*.hpp" -type f -exec clang-format -i {} ";"
 	@ $(LOG_TIME) "$(C_BLUE) CF $(C_GREEN) Code formated  $(C_RESET)"
 
 clean:
