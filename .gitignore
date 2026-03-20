@@ -1,0 +1,14 @@
+.direnv
+.envrc
+.build
+
+Exemple
+SFML-3.0.2
+
+*.o
+
+raytracer
+
+*.exccalidraw
+
+todolist
