@@ -14,13 +14,18 @@ namespace game {
         arc::Vec2 _curCoord;
       public:
         entity(std::string name, std::string path, size_t x, size_t y);
-        const float get_curx() const { return _curCoord.x; }
-        const float get_cury() const { return _curCoord.y; }
-        const float get_startx() const { return _startCoord.x; }
-        const float get_starty() const { return _startCoord.y; }
-        const std::string get_name() const { return _name; }
-        const std::string get_path() const { return _path; }
-        void set_curx(float x) { _curCoord.x = x; } 
-        void set_cury(float y) { _curCoord.y = y; }  
+        const float getCurx() const { return _curCoord.x; }
+        const float getCury() const { return _curCoord.y; }
+        const float getStartx() const { return _startCoord.x; }
+        const float getStarty() const { return _startCoord.y; }
+        const std::string getPame() const { return _name; }
+        const std::string getPath() const { return _path; }
+        void setCurx(float x) { _curCoord.x = x; } 
+        void setCury(float y) { _curCoord.y = y; }
+        void setCurCoord(float x, float y) {
+          _curCoord.x = x;
+          _curCoord.y = y;
+        }
+        void setCurCoord(arc::Vec2 pos) { _curCoord = pos; }
     };
 }
