@@ -19,15 +19,14 @@ private:
 public:
   Entity(const std::string name, const std::string path,
          const std::string pathCli, size_t x, size_t y);
-  float getX() const { return _pos.x; }
-  float getY() const { return _pos.y; }
+  arc::Vec2 getPos() const { return _pos; }
   float getStartX() const { return _startPos.x; }
   float getStartY() const { return _startPos.y; }
-  const std::string getPame() const { return _name; }
+  const std::string getName() const { return _name; }
   const std::string getPath() const { return _texturePath; }
-  void setCurx(float x) { _pos.x = x; }
-  void setCury(float y) { _pos.y = y; }
-  void setCurCoord(float x, float y) {
+  void setX(float x) { _pos.x = x; }
+  void setY(float y) { _pos.y = y; }
+  void setPos(float x, float y) {
     _pos.x = x;
     _pos.y = y;
   }

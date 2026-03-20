@@ -1,6 +1,8 @@
 #pragma once
-#include "IGame.hpp"
+
 #include <memory>
+
+#include "IGame.hpp"
 
 class GameLoader {
 public:

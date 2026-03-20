@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Entity.hpp"
 #include <vector>
+
+#include "Entity.hpp"
 
 namespace arc {
 class Core {

@@ -1,6 +1,8 @@
 #pragma once
+
+#include <string>
+
 #include "Utils.hpp"
-#include "string"
 
 namespace game {
 class Text {
