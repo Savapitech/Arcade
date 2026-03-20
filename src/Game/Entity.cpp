@@ -3,6 +3,11 @@
 #include <string>
 
 namespace game {
-    entity::entity(std::string name, std::string path, size_t x, size_t y) 
-    : _name(name),  _path(path), _startCoord(x, y), _curCoord(x, y) {}
+    entity::entity(const std::string name, const std::string path, const std::string pathCli, size_t x, size_t y) 
+    :   _name(name),  
+        _path(path),
+        _pathCli(pathCli),
+        _startCoord(x, y),
+        _curCoord(x, y) 
+        {}
 }

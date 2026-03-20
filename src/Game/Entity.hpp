@@ -10,10 +10,11 @@ namespace game {
       private:
         const std::string _name;
         const std::string _path;
+        const std::string _pathCli;
         const arc::Vec2 _startCoord;
         arc::Vec2 _curCoord;
       public:
-        entity(std::string name, std::string path, size_t x, size_t y);
+        entity(const std::string name, const std::string path, const std::string pathCli, size_t x, size_t y);
         const float getCurx() const { return _curCoord.x; }
         const float getCury() const { return _curCoord.y; }
         const float getStartx() const { return _startCoord.x; }
