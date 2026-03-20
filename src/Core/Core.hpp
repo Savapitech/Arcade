@@ -6,7 +6,7 @@
 namespace arc {
   class Core{
       public:
-        const std::vector<game::entity> &get() const;
-        void setSprite(const std::vector<game::entity> &);
+        void setSprite(const std::vector<game::Entity> &);
+      private:
   };
 } //namespace core

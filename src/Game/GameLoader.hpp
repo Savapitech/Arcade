@@ -5,5 +5,5 @@
 class GameLoader 
 {
     public:
-        std::unique_ptr<IGame> gameLoader();
+        std::unique_ptr<game::IGame> gameLoader();
 };
