@@ -12,13 +12,14 @@ private:
   const std::string _texturePath;
   const std::string _asciiTexture;
   const arc::Vec2 _startPos;
-  arc::Vec2 _pos;
+  const arc::Vec2 _hitBoxSize;
 
+  arc::Vec2 _pos;
   bool _hidden;
 
 public:
   Entity(const std::string name, const std::string path,
-         const std::string pathCli, size_t x, size_t y);
+         const std::string pathCli, arc::Vec2 coord, arc::Vec2 boxSize);
   arc::Vec2 getPos() const { return _pos; }
   float getStartX() const { return _startPos.x; }
   float getStartY() const { return _startPos.y; }

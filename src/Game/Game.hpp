@@ -15,14 +15,15 @@ public:
 };
 
 class AGame : public IGame {
-protected:
-  bool _running = false;
-  size_t _tick;
-  std::vector<game::Entity> _entities;
-  std::vector<game::Text> _texts;
-
-public:
-  const std::vector<game::Entity> &getEntities() const { return _entities; }
-  void stopGame() { _running = false; }
+  protected:
+    bool _running = false;
+    size_t _tick;
+    std::vector<game::Entity> _entities;
+    std::vector<game::Text> _texts;
+  
+  public:
+    const std::vector<game::Entity> &getEntities() const { return _entities; }
+    const std::vector<game::Text> &getText() const { return _texts; }
+    void stopGame() { _running = false; }
 };
 } // namespace game
