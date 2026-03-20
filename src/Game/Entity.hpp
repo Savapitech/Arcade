@@ -31,6 +31,6 @@ namespace game {
         }
         void setCurCoord(arc::Vec2 pos) { _curCoord = pos; }
         bool isHidden(){return _hidden;}
-        bool setHidden(bool hidden){ _hidden = hidden ;}
+        void setHidden(bool hidden){ _hidden = hidden;}
     };
 }

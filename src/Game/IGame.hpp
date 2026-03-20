@@ -2,11 +2,16 @@
 
 #include <vector>
 #include "Entity.hpp"
+#include "Text.hpp"
 
 namespace game {
 
   class IGame {
-      private:
-        std::vector<game::entity> _entites; 
   };
-} //namespace game
+
+  class AGame {
+    protected:
+       std::vector<game::Entity> _entites;
+       std::vector<game::Text> _texts;
+  }
+}
