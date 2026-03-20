@@ -30,7 +30,7 @@ public:
     _pos.x = x;
     _pos.y = y;
   }
-  void setCurCoord(arc::Vec2 pos) { _pos = pos; }
+  void setPos(arc::Vec2 pos) { _pos = pos; }
   bool isHidden() { return _hidden; }
   void setHidden(bool hidden) { _hidden = hidden; }
 };
