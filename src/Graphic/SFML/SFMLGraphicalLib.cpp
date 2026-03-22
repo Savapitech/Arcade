@@ -87,3 +87,7 @@ void SFML::fillEvent(Event& event)
         }
     }
 }
+
+extern "C" IGraphic *entryPoint {
+  return new SFML();
+}
