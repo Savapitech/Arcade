@@ -11,16 +11,16 @@ private:
   const std::string _name;
   const std::string _texturePath;
   const std::string _asciiTexture;
-  const arc::Vec2 _startPos;
-  const arc::Vec2 _hitBoxSize;
+  const core::Vec2 _startPos;
+  const core::Vec2 _hitBoxSize;
 
-  arc::Vec2 _pos;
+  core::Vec2 _pos;
   bool _hidden;
 
 public:
   Entity(const std::string name, const std::string path,
-         const std::string pathCli, arc::Vec2 coord, arc::Vec2 boxSize);
-  arc::Vec2 getPos() const { return _pos; }
+         const std::string pathCli, core::Vec2 coord, core::Vec2 boxSize);
+  core::Vec2 getPos() const { return _pos; }
   float getStartX() const { return _startPos.x; }
   float getStartY() const { return _startPos.y; }
   const std::string getName() const { return _name; }
@@ -31,7 +31,7 @@ public:
     _pos.x = x;
     _pos.y = y;
   }
-  void setPos(arc::Vec2 pos) { _pos = pos; }
+  void setPos(core::Vec2 pos) { _pos = pos; }
   bool isHidden() { return _hidden; }
   void setHidden(bool hidden) { _hidden = hidden; }
 };

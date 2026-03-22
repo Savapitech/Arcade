@@ -1,6 +1,6 @@
 #pragma once
 
-namespace arc {
+namespace core {
 class Vec2 {
 public:
   float x;
@@ -9,4 +9,4 @@ public:
   Vec2(float x_ = 0.f, float y_ = 0.f) : x(x_), y(y_) {}
 };
 
-} // namespace arc
+} // namespace core

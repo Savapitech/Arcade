@@ -4,11 +4,11 @@
 
 #include "Entity.hpp"
 
-namespace arc {
+namespace core {
 class Core {
 public:
   void setSprite(const std::vector<game::Entity> &);
 
 private:
 };
-} // namespace arc
+} // namespace core
