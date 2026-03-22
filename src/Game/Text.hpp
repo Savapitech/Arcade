@@ -15,8 +15,8 @@ private:
   bool _hidden;
 
 public:
-  Entity(const std::string name, const std::string path,
-         const std::string pathCli, size_t x, size_t y);
+  Text(const std::string name, const std::string path,
+         const std::string pathCli, core::Vec2 pos);
   core::Vec2 getPos() const { return _pos; }
   float getStartX() const { return _startPos.x; }
   float getStartY() const { return _startPos.y; }

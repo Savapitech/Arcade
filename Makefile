@@ -13,7 +13,7 @@ CFLAGS += -Wp,-U_FORTIFY_SOURCE -Wcast-qual
 CFLAGS += -Wformat=2 -Wshadow -fno-builtin
 CFLAGS += -Wstrict-aliasing=0 -Wunreachable-code
 CFLAGS += -Wwrite-strings -Werror=format-nonliteral -Werror=return-type
-CFLAGS += -std=c++20 -iquote src
+CFLAGS += -std=c++20 -iquote src/Core -iquote src/Game -iquote src/Graphic
 
 include utils.mk
 

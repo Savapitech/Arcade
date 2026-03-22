@@ -27,7 +27,9 @@
             gcovr
           ] ++ (if !isDarwinAarch64 then [
             sfml
-          ] else [ ]) ++ [
+          ] else [
+            libcxx
+          ]) ++ [
             criterion
             clang
           ];

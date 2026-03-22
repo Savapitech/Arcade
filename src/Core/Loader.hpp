@@ -2,11 +2,11 @@
 
 #include <memory>
 
-#include "IGame.hpp"
+#include "Game.hpp"
 
 namespace core {
 class DLLoader {
 public:
-  std::unique_ptr<game::IGame> DLLoader();
+  DLLoader();
 };
 } // namespace core
