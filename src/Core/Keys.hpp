@@ -2,7 +2,7 @@
 
 namespace core 
 {
-    enum key 
+    enum Keys 
     {
         A,
         B,
