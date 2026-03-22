@@ -8,7 +8,7 @@
 
 void SFML::openWindow(size_t heigth, size_t width, const std::string &windowName, Event& event)
 {
-    sf::VideoMode video({heigth, width});
+    sf::VideoMode video({static_cast<unsigned int>(heigth), static_cast<unsigned int>(width)});
     this->_window.create(video, windowName);
     event.setCloseState(true);
 }
@@ -88,6 +88,8 @@ void SFML::fillEvent(Event& event)
     }
 }
 
-extern "C" IGraphic *entryPoint {
+
+
+extern "C" graphic::IGraphic *entryPoint() {
   return new SFML();
 }
