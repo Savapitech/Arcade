@@ -3,6 +3,7 @@
 
 #include "Graphic.hpp"
 #include "Loader.hpp"
+#include "Logger.hpp"
 
 #define SUCCESS 0;
 #define FAILURE 84;
@@ -18,12 +19,11 @@ int main(int ac, char **av) {
     Event ev;
 
     a->openWindow(1920, 1080, "Super", ev);
-    while (a->isOpen()) {
+    while (a->isOpen())
       a->fillEvent(ev);
-    }
 
     try {
-      std::cout << "arcade in progress" << std::endl;
+      LOG_ERROR("arcade in progress");
     } catch (const std::exception &e) {
       return std::cerr << e.what() << std::endl, FAILURE
     }

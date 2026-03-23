@@ -1,35 +1,74 @@
 #pragma once
 
+#include <chrono>
+#include <cstdint>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
-namespace Log {
+#include "Sequences.hpp"
 
-#define CLR_BOLD_INFO "\033[1;34m"
-#define CLR_BOLD_WARNING "\033[1;35m"
-#define CLR_BOLD_ERROR "\033[1;31m"
-#define CLR_BOLD_DEBUG "\033[1;32m"
-#define CLR_INFO "\033[0;34m"
-#define CLR_WARNING "\033[0;35m"
-#define CLR_ERROR "\033[0;31m"
-#define CLR_DEBUG "\033[0;32m"
-#define CLR_RESET "\033[0m"
+enum level_t : uint8_t { L_DEBUG, L_LOG, L_WARN, L_ERROR, L_FATAL };
 
-class Logger {
-public:
-  enum LogLvl { NONE = 0, INFO = 1, WARNING = 2, ERROR = 3, DEBUG = 4 };
-  static void info(const std::string &str) noexcept;
-  static void warning(const std::string &str) noexcept;
-  static void error(const std::string &str) noexcept;
-  static void debug(const std::string &str) noexcept;
-  static void SetLogLvl(const LogLvl lvl) noexcept;
-  static const LogLvl &GetLogLvl(void) noexcept { return LoggerLvl; }
-  static void SetLogLvlStr(const std::string &lvl) noexcept;
-  template <typename T> static void logVar(const T &var) noexcept {
-    Logger::debug(std::to_string(var));
+namespace Logger {
+
+inline level_t &minLevel() {
+  static level_t level = L_DEBUG;
+  return level;
+}
+
+inline void setLevel(level_t level) { minLevel() = level; }
+
+inline std::string timestamp() {
+  auto now = std::chrono::system_clock::now();
+  auto time = std::chrono::system_clock::to_time_t(now);
+  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                now.time_since_epoch()) %
+            1000;
+  std::ostringstream oss;
+  oss << std::put_time(std::localtime(&time), "%H:%M:%S");
+  oss << '.' << std::setfill('0') << std::setw(3) << ms.count();
+  return oss.str();
+}
+
+inline const char *levelTag(level_t level) {
+  switch (level) {
+  case L_DEBUG:
+    return PURPLE "DBG" RESET;
+  case L_LOG:
+    return BLUE "LOG" RESET;
+  case L_WARN:
+    return YELLOW "WRN" RESET;
+  case L_ERROR:
+    return RED "ERR" RESET;
+  case L_FATAL:
+    return BOLD RED "FTL" RESET;
   }
+  return "???";
+}
 
-private:
-  static LogLvl LoggerLvl;
-  static void log_info(LogLvl lvl, const std::string &msg) noexcept;
-};
-} // namespace Log
+inline void print(level_t level, const char *file, int line, const char *msg) {
+  if (level < minLevel())
+    return;
+  const char *filename = file;
+  for (const char *p = file; *p; ++p)
+    if (*p == '/')
+      filename = p + 1;
+
+  std::cout << BLUE << timestamp() << RESET " [" << levelTag(level) << "] "
+            << PURPLE << filename << ":" << line << RESET BOLD " - " RESET
+            << msg << std::endl;
+}
+
+inline void print(level_t level, const char *file, int line,
+                  const std::string &msg) {
+  print(level, file, line, msg.c_str());
+}
+
+} // namespace Logger
+
+#define LOG_DEBUG(msg) Logger::print(L_DEBUG, __FILE__, __LINE__, msg)
+#define LOG_INFO(msg) Logger::print(L_LOG, __FILE__, __LINE__, msg)
+#define LOG_WARN(msg) Logger::print(L_WARN, __FILE__, __LINE__, msg)
+#define LOG_ERROR(msg) Logger::print(L_ERROR, __FILE__, __LINE__, msg)
+#define LOG_FATAL(msg) Logger::print(L_FATAL, __FILE__, __LINE__, msg)
