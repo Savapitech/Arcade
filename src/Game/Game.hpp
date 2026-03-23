@@ -12,6 +12,7 @@ public:
   virtual const std::vector<Entity> &getEntities() const = 0;
   virtual void initGame() = 0;
   virtual void stopGame() = 0;
+  virtual ~IGame() = default;
 };
 
 class AGame : public IGame {
