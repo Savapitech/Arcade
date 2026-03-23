@@ -5,15 +5,19 @@ BIN_NAME := arcade
 SRC := $(wildcard src/*.cpp)
 SRC += $(wildcard src/*/*.cpp)
 
+SRC_SFML := $(wildcard src/Graphic/SFML/*.cpp)
+
 BUILD_DIR := .build
 
-CFLAGS += -Wall -Wextra -Werror=write-strings
-CFLAGS += -Wno-unused-parameter -Wunused-result
-CFLAGS += -Wp,-U_FORTIFY_SOURCE -Wcast-qual
-CFLAGS += -Wformat=2 -Wshadow -fno-builtin
-CFLAGS += -Wstrict-aliasing=0 -Wunreachable-code
-CFLAGS += -Wwrite-strings -Werror=format-nonliteral -Werror=return-type
-CFLAGS += -std=c++20 -iquote src/Core -iquote src/Game -iquote src/Graphic
+CXXFLAGS += -Wall -Wextra -Werror=write-strings
+CXXFLAGS += -Wno-unused-parameter -Wunused-result
+CXXFLAGS += -Wp,-U_FORTIFY_SOURCE -Wcast-qual
+CXXFLAGS += -Wformat=2 -Wshadow -fno-builtin -Wno-unused-command-line-argument 
+CXXFLAGS += -Wstrict-aliasing=0 -Wunreachable-code
+CXXFLAGS += -Wwrite-strings -Werror=format-nonliteral -Werror=return-type
+CXXFLAGS += -std=c++20 -iquote src/Core -iquote src/Game -iquote src/Graphic
+
+SFML_LDFLAGS += $(shell pkg-config --cflags --libs sfml-graphics sfml-window sfml-system)
 
 include utils.mk
 
@@ -30,21 +34,26 @@ OBJ_$(strip $1) := $$($(strip $2):%.cpp=$$(BUILD_DIR)/$(strip $1)/%.o)
 
 $$(BUILD_DIR)/$(strip $1)/%.o: %.cpp
 	@ mkdir -p $$(dir $$@)
-	@ $$(COMPILE.cpp) $$(CFLAGS) $$< -o $$@
+	@ $$(COMPILE.cpp) $$(CXXFLAGS) $(strip $3) $$< -o $$@
 	@ $$(LOG_TIME) "$$(C_GREEN) CC $$(C_PURPLE) $$(notdir $$@) $$(C_RESET)"
 
 $$(NAME_$(strip $1)): $$(OBJ_$(strip $1))
-	@ $$(LINK.cpp) $$(OBJ_$(strip $1)) $$(LDFLAGS) $$(LDLIBS) -o $$@
+	@ $$(LINK.cpp) $$(OBJ_$(strip $1)) $$(LDFLAGS) $$(LDLIBS) $(strip $3) -o $$@
 	@ $$(LOG_TIME) "$$(C_BLUE) LD $$(C_PURPLE) $$(notdir $$@) $$(C_RESET)"
 	@ $$(LOG_TIME) "$$(C_GREEN) OK  Compilation finished $$(C_RESET)"
 
 endef
 
-$(eval $(call mk-profile, release, SRC, , $(BIN_NAME)))
+$(eval $(call mk-profile, core, SRC, , $(BIN_NAME)))
+$(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared, lib/arcade_sfml.so))
 $(eval $(call mk-profile, debug, SRC, -D DEBUG_MODE -lasan -fanalyzer -g3, debug))
 $(eval $(call mk-profile, test, SRC, , test))
 
-all: $(NAME_release)
+core: $(NAME_core)
+
+graphicals: $(NAME_sfml)
+
+all: $(NAME_core) $(NAME_sfml)
 
 tests: $(NAME_test)
 	@ bash tests/run_all.sh
@@ -70,10 +79,3 @@ re:	fclean all
 
 PREFIX ?=
 BINDIR ?= $(PREFIX)/bin
-
-.PHONY: install uninstall
-install: $(NAME_release)
-	install -Dm755 -t $(BINDIR) $(NAME_release)
-
-uninstall:
-	$(RM) $(BINDIR)/$(NAME_release)
