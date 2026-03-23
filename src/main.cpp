@@ -12,7 +12,7 @@ int main(int ac, char **av)
   if (ac != 2)
     return std::cerr << "Usage ./arcade lib.so" << std::endl, FAILURE;
 
-  DLLoader<graphic::IGraphic> loader("./sfml.so");
+  DLLoader<graphic::IGraphic> loader("./lib/arcade_sfml.so");
   {
   std::unique_ptr<graphic::IGraphic> a = loader.getInstance("entryPoint");
 

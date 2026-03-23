@@ -45,7 +45,7 @@ $$(NAME_$(strip $1)): $$(OBJ_$(strip $1))
 endef
 
 $(eval $(call mk-profile, core, SRC, , $(BIN_NAME)))
-$(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared, lib/arcade_sfml.so))
+$(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared -fPIC, lib/arcade_sfml.so))
 $(eval $(call mk-profile, debug, SRC, -D DEBUG_MODE -lasan -fanalyzer -g3, debug))
 $(eval $(call mk-profile, test, SRC, , test))
 
