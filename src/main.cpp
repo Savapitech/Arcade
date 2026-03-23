@@ -14,7 +14,7 @@ int main(int ac, char **av)
 
   DLLoader<graphic::IGraphic> loader("./sfml.so");
 
-  graphic::IGraphic *a = loader.getInstance("entryPoint");
+  std::unique_ptr<graphic::IGraphic> a = loader.getInstance("entryPoint");
 
   Event ev;
 
@@ -23,7 +23,7 @@ int main(int ac, char **av)
   {
     a->fillEvent(ev);
   }
-  
+
   
 
   try {

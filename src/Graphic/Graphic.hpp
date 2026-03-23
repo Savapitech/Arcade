@@ -15,5 +15,7 @@ namespace graphic {
       virtual void initGraphic(const std::vector<game::Entity> &) = 0;
       virtual void drawEntities(const std::vector<game::Entity> &) = 0;
       virtual void fillEvent(Event &event) = 0;
+
+      virtual ~IGraphic() = 0;
   };
 } // namespace graphic

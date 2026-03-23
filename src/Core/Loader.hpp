@@ -2,6 +2,7 @@
 
 #include <dlfcn.h>
 #include <string>
+#include <memory>
 
 template <typename T> class DLLoader {
 public:
@@ -17,7 +18,7 @@ public:
       dlclose(_handle);
   }
 
-  T *getInstance(const std::string &symbol) {
+  std::unique_ptr<T> getInstance(const std::string &symbol) {
     dlerror();
 
     using create_t = T *(*)();
@@ -29,7 +30,8 @@ public:
     if (err)
       throw std::runtime_error(err);
 
-    return entryPoint();
+    T *t = entryPoint();
+    return std::unique_ptr<T>(t);
   }
 
 private:
