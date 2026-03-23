@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <stack>
 
 #include "Keys.hpp"
@@ -20,7 +21,7 @@ public:
   void updateMouseCoord(core::Vec2);
   bool isClicked();
   bool updateClicked();
-  bool MouseUpdateMode(uint8_t);
+  bool MouseUpdateMode(std::uint8_t);
   bool getCloseState() { return close; }
   void setCloseState(bool state) { close = state; }
   std::stack<core::Keys> &getKeyStack() { return keyStack; }

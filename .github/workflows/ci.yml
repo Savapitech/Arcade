@@ -40,6 +40,9 @@ jobs:
           key: ${{ secrets.GH_SSH_PRIVATE_KEY }}
           known_hosts: $GH_PUB_KEY
 
+      - name: Check code format
+        run: make check_format
+
       - name: Build project
         run: make core
 
