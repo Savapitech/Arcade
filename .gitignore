@@ -1,3 +1,4 @@
+.cache
 arcade
 .direnv
 .envrc
@@ -12,5 +13,7 @@ SFML-3.0.2
 raytracer
 
 *.exccalidraw
+
+compile_commands.json
 
 todolist

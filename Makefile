@@ -6,6 +6,7 @@ SRC := $(wildcard src/*.cpp)
 SRC += $(wildcard src/*/*.cpp)
 
 SRC_SFML := $(wildcard src/Graphic/SFML/*.cpp)
+SRC_NCURSES := $(wildcard src/Graphic/Ncurses/*.cpp)
 
 BUILD_DIR := .build
 
@@ -18,6 +19,7 @@ CXXFLAGS += -Wwrite-strings -Werror=format-nonliteral -Werror=return-type
 CXXFLAGS += -std=c++20 -iquote src/Core -iquote src/Game -iquote src/Graphic -iquote src/Logger
 
 SFML_LDFLAGS += $(shell pkg-config --cflags --libs sfml-graphics sfml-window sfml-system)
+NCURSES_LDFLAGS += -lncurses
 
 include utils.mk
 
@@ -46,14 +48,15 @@ endef
 
 $(eval $(call mk-profile, core, SRC, , $(BIN_NAME)))
 $(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared -fPIC, lib/arcade_sfml.so))
+$(eval $(call mk-profile, ncurses, SRC_NCURSES, $(NCURSES_LDFLAGS) -shared -fPIC, lib/arcade_ncurses.so))
 $(eval $(call mk-profile, debug, SRC, -D DEBUG_MODE -lasan -fanalyzer -g3, debug))
 $(eval $(call mk-profile, test, SRC, , test))
 
 core: $(NAME_core)
 
-graphicals: $(NAME_sfml)
+graphicals: $(NAME_sfml) $(NAME_ncurses)
 
-all: $(NAME_core) $(NAME_sfml)
+all: core graphicals
 
 tests: $(NAME_test)
 	@ bash tests/run_all.sh

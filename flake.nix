@@ -27,6 +27,7 @@
             gcovr
           ] ++ (if !isDarwinAarch64 then [
             sfml
+            ncurses
           ] else [
             libcxx
           ]) ++ [
