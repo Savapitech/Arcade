@@ -5,6 +5,8 @@
 #include "Graphic.hpp"
 #include "Loader.hpp"
 
+#include "Logger.hpp"
+
 namespace fs = std::filesystem;
 
 core::Core::Core(const std::string &graphicPath) {
@@ -16,11 +18,14 @@ core::Core::Core(const std::string &graphicPath) {
     }
     try {
       DLLoader<graphic::IGraphic> loader(entry.path().string());
-      this->graphicalTab.push_back(loader.getInstance("graphicalEntryPoint"));
+      this->graphicalTab.push_back(loader.getInstance("graphicEntryPoint"));
+      LOG_INFO("Load graphic tab");
+      continue;
     } catch (const std::exception &e) {
     }
     try {
       DLLoader<game::IGame> loader(entry.path().string());
+      LOG_INFO("Load game tab");
       this->gameTab.push_back(loader.getInstance("gameEntryPoint"));
     } catch (const std::exception &e) {
       throw std::runtime_error("Failed while loading lib");
@@ -33,7 +38,9 @@ core::Core::Core(const std::string &graphicPath) {
 void core::Core::run() {
   Event event;
 
-  // while (this->graphicalTab[this->graphicLibIdx]->) {
-  //   /* code */
-  // }
+  this->graphicalTab[this->graphicLibIdx]->openWindow(1920, 1080, "arcade",
+                                                      event);
+  while (this->graphicalTab[this->graphicLibIdx]->isOpen()) {
+    this->graphicalTab[this->graphicLibIdx]->fillEvent(event);
+  }
 }
