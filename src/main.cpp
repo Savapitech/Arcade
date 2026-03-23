@@ -3,13 +3,14 @@
 
 #include "Graphic.hpp"
 #include "Loader.hpp"
+#include "Logger.hpp"
 
 #define SUCCESS 0;
 #define FAILURE 84;
 
 int main(int ac, char **av) {
   if (ac != 2)
-    return std::cerr << "Usage ./arcade lib.so" << std::endl, FAILURE;
+    return LOG_ERROR("Usage ./arcade lib.so"), FAILURE;
 
   DLLoader<graphic::IGraphic> loader("./lib/arcade_sfml.so");
   {
