@@ -1,14 +1,14 @@
 #pragma once
 
 #include <dlfcn.h>
-#include <string>
-#include <memory>
 #include <iostream>
+#include <memory>
+#include <string>
 
 template <typename T> class DLLoader {
 public:
-  DLLoader(const DLLoader&) = delete;
-  DLLoader& operator=(const DLLoader&) = delete;
+  DLLoader(const DLLoader &) = delete;
+  DLLoader &operator=(const DLLoader &) = delete;
 
   DLLoader(const std::string &path) : _handle(nullptr), _path(path) {
     _handle = dlopen(_path.c_str(), RTLD_LAZY);
@@ -18,7 +18,7 @@ public:
   }
 
   ~DLLoader() {
-    if (_handle != nullptr){
+    if (_handle != nullptr) {
       dlclose(_handle);
       _handle = nullptr;
     }

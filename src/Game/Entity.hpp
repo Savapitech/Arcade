@@ -21,7 +21,7 @@ public:
   Entity(const std::string name, const std::string path,
          const std::string pathCli, core::Vec2 coord, core::Vec2 boxSize);
   core::Vec2 getPos() const { return _pos; }
-  const core::Vec2  getStartPos() const {return _startPos;}
+  const core::Vec2 getStartPos() const { return _startPos; }
   const std::string getName() const { return _name; }
   const std::string getPath() const { return _texturePath; }
   void setX(float x) { _pos.x = x; }
