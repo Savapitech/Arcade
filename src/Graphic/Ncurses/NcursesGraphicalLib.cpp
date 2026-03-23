@@ -11,7 +11,7 @@ void Ncurses::openWindow(size_t heigth, size_t width,
   noecho();
   cbreak();
   keypad(stdscr, TRUE);
-  //resizeterm(heigth, width);
+  // resizeterm(heigth, width);
   std::cout << "\033]0;" << windowName << std::flush;
   curs_set(0);
   refresh();
