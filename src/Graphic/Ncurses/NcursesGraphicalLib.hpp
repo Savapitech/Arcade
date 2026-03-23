@@ -14,7 +14,7 @@ public:
   void closeWindow() override;
   bool isOpen() override;
 
-  void initGraphic(const std::vector<game::Entity> &) override;
-  void drawEntities(const std::vector<game::Entity> &) override;
+  void initGraphic(const std::vector<game::Entity> &) override {};
+  void drawEntities(const std::vector<game::Entity> &) override {};
   void fillEvent(Event &event) override;
 };
