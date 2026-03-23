@@ -10,7 +10,7 @@ SRC_NCURSES := $(wildcard src/Graphic/Ncurses/*.cpp)
 
 BUILD_DIR := .build
 
-CXXFLAGS += -Wall -Wextra -Werror=write-strings
+CXXFLAGS += -Wall -Wextra -Werror=write-strings -g
 CXXFLAGS += -Wno-unused-parameter -Wunused-result
 CXXFLAGS += -Wp,-U_FORTIFY_SOURCE -Wcast-qual
 CXXFLAGS += -Wformat=2 -Wshadow -fno-builtin -Wno-unused-command-line-argument 

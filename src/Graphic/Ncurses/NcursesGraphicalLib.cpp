@@ -60,4 +60,4 @@ void Ncurses::fillEvent(Event &event) {
     closeWindow();
 }
 
-extern "C" graphic::IGraphic *entryPoint() { return new Ncurses(); }
+extern "C" graphic::IGraphic *graphicEntryPoint() { return new Ncurses(); }

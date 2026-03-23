@@ -130,4 +130,4 @@ SFML::~SFML() {
     this->_window.close();
 }
 
-extern "C" graphic::IGraphic *entryPoint() { return new SFML(); }
+extern "C" graphic::IGraphic *graphicEntryPoint() { return new SFML(); }
