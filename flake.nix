@@ -28,6 +28,7 @@
           ] ++ (if !isDarwinAarch64 then [
             sfml
             ncurses
+            pkg-config
           ] else [
             libcxx
           ]) ++ [

@@ -19,7 +19,7 @@ CXXFLAGS += -Wwrite-strings -Werror=format-nonliteral -Werror=return-type
 CXXFLAGS += -std=c++20 -iquote src/Core -iquote src/Game -iquote src/Graphic -iquote src/Logger
 
 SFML_LDFLAGS += $(shell pkg-config --cflags --libs sfml-graphics sfml-window sfml-system)
-NCURSES_LDFLAGS += -lncurses
+NCURSES_LDFLAGS += $(shell pkg-config --cflags --libs ncurses)
 
 include utils.mk
 

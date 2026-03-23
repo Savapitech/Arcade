@@ -5,10 +5,10 @@
 #include "../Graphic.hpp"
 
 class Ncurses : public graphic::IGraphic {
-  private:
-    bool _isopen = false;
+private:
+  bool _isopen = false;
 
-  public:
+public:
   void openWindow(size_t heigth, size_t width, const std::string &windowName,
                   Event &event) override;
   void closeWindow() override;
@@ -17,5 +17,4 @@ class Ncurses : public graphic::IGraphic {
   void initGraphic(const std::vector<game::Entity> &) override;
   void drawEntities(const std::vector<game::Entity> &) override;
   void fillEvent(Event &event) override;
-
 };
