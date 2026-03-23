@@ -21,5 +21,5 @@ class SFML : public graphic::IGraphic
         void drawEntities(const std::vector<game::Entity> &) override;
         void fillEvent(Event &event) override;
 
-        ~SFML() = default;
+        ~SFML() override;
 };

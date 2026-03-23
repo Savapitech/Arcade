@@ -27,7 +27,7 @@ void SFML::initGraphic(const std::vector<game::Entity>& entities)
     for (auto &entity : entities){
         this->_textureTab.push_back(sf::Texture(entity.getPath()));
         this->_spriteTab.push_back(sf::Sprite(this->_textureTab.back()));
-        this->_spriteTab.end()->setPosition({entity.getStartPos().x, entity.getStartPos().y});
+        this->_spriteTab.back().setPosition({(float)entity.getStartPos().x, (float)entity.getStartPos().y});
     }
 }
 
@@ -85,6 +85,16 @@ void SFML::fillEvent(Event& event)
             this->_window.close();
             event.setCloseState(false);
         }
+    }
+}
+
+SFML::~SFML()
+{
+    this->_spriteTab.clear();
+    this->_textureTab.clear();
+
+    if (this->_window.isOpen()) {
+        this->_window.close();
     }
 }
 

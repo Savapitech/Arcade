@@ -13,7 +13,7 @@ int main(int ac, char **av)
     return std::cerr << "Usage ./arcade lib.so" << std::endl, FAILURE;
 
   DLLoader<graphic::IGraphic> loader("./sfml.so");
-
+  {
   std::unique_ptr<graphic::IGraphic> a = loader.getInstance("entryPoint");
 
   Event ev;
@@ -24,13 +24,11 @@ int main(int ac, char **av)
     a->fillEvent(ev);
   }
 
-  
-
   try {
     std::cout << "arcade in progress" << std::endl;
   } catch (const std::exception &e) {
     return std::cerr << e.what() << std::endl, FAILURE
   }
-  
+  }
   return SUCCESS;
 }
