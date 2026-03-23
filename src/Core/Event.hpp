@@ -7,8 +7,8 @@
 
 
 /*Macro non-blocking or blocking mouse update*/
-#define MNOBLOCK    (1 >> 1)
-#define MNBLOCK     (1 >> 2)
+#define MNOBLOCK  1 << 0
+#define MNBLOCK   1 << 1
 
 class Event
 {
