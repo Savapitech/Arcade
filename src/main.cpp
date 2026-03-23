@@ -24,7 +24,7 @@ int main(int ac, char **av) {
       return std::cerr << e.what() << std::endl, FAILURE
     }
   } catch (const std::exception &e) {
-    std::cerr << e.what() << '\n';
+    LOG_FATAL(e.what());
   }
   return SUCCESS;
 }
