@@ -41,7 +41,7 @@ jobs:
           known_hosts: $GH_PUB_KEY
 
       - name: Build project
-        run: make
+        run: make core
 
   sync_repository:
     needs: [ check_the_repository_state ]
