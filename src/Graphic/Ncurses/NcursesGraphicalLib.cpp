@@ -2,14 +2,23 @@
 #include <map>
 #include <ncurses.h>
 #include <ostream>
+#include <sstream>
 #include <string>
 
 #include "../../Core/Utils.hpp"
 #include "NcursesGraphicalLib.hpp"
 
-NcursesData::NcursesData(const std::string &ascii, core::Vec2 pos,
-                         core::Vec2 hitbox)
-    : _asciiTexture(ascii), _pos(pos), _hitbox(hitbox) {}
+void custom_print(core::Vec2 pos, std::string asciiTexture) {
+  int sep = 0;
+  int y = static_cast<int>(pos.y) / 8;
+  int x = static_cast<int>(pos.x) / 4;
+  while (sep < static_cast<int>(asciiTexture.size())) {
+    sep = asciiTexture.find("|");
+    mvprintw(y, x, "%s", asciiTexture.substr(0, sep).c_str());
+    asciiTexture.erase(0, sep + 1);
+    y++;
+  }
+}
 
 void myPrintw(core::Vec2 pos, std::string asciiTexture) {
   static const std::map<std::string, int> mapColors{
@@ -23,14 +32,18 @@ void myPrintw(core::Vec2 pos, std::string asciiTexture) {
   auto it = mapColors.find(color);
   if (it != mapColors.end()) {
     attron(COLOR_PAIR(it->second));
-    mvprintw(static_cast<int>(pos.y), static_cast<int>(pos.x), "%s",
-             asciiTexture.c_str());
+    custom_print(pos, asciiTexture);
     attroff(COLOR_PAIR(it->second));
   }
 }
 
+NcursesData::NcursesData(const std::string &ascii, core::Vec2 pos,
+                         core::Vec2 hitbox)
+    : _asciiTexture(ascii), _pos(pos), _hitbox(hitbox) {}
+
 void Ncurses::openWindow(size_t heigth, size_t width,
                          const std::string &windowName, Event &event) {
+  (void)windowName;
   initscr();
   noecho();
   cbreak();
@@ -45,7 +58,6 @@ void Ncurses::openWindow(size_t heigth, size_t width,
   init_pair(6, COLOR_CYAN, COLOR_BLACK);
   init_pair(7, COLOR_WHITE, COLOR_BLACK);
   resizeterm(heigth, width);
-  // std::cout << "\033]0;" << windowName << std::flush;
   curs_set(0);
   refresh();
   this->_isopen = true;
@@ -65,7 +77,7 @@ void Ncurses::initGraphic(const std::vector<game::Entity> &entities) {
 }
 
 void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
-  clear();
+  erase();
   for (NcursesData &data : this->_dataTab) {
     myPrintw(data.getPos(), data.getAsciiTexture());
   }
