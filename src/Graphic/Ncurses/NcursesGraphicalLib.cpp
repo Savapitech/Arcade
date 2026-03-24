@@ -4,6 +4,11 @@
 #include <ostream>
 
 #include "NcursesGraphicalLib.hpp"
+#include "../../Core/Utils.hpp"
+
+NcursesData::NcursesData(const std::string &ascii, core::Vec2 pos, core::Vec2 hitbox)
+  : _asciiTexture(ascii), _pos(pos), _hitbox(hitbox)
+{}
 
 void Ncurses::openWindow(size_t heigth, size_t width,
                          const std::string &windowName, Event &event) {
@@ -22,6 +27,19 @@ void Ncurses::openWindow(size_t heigth, size_t width,
 void Ncurses::closeWindow() {
   this->_isopen = false;
   endwin();
+}
+
+void Ncurses::initGraphic(const std::vector<game::Entity> &entities) {
+  for (auto &entity : entities) {
+      this->_dataTab.push_back(NcursesData(entity.getAsciitexture(),
+          entity.getStartPos(), entity.getHitbox()));
+  }
+}
+
+void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
+  for (NcursesData &data : this->_dataTab) {
+    std::cout << "Data stored : " << data.getAsciiTexture() << std::endl;
+  } 
 }
 
 bool Ncurses::isOpen() { return this->_isopen; }

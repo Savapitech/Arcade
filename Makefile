@@ -77,7 +77,7 @@ clean:
 	@ $(LOG_TIME) "$(C_YELLOW) RM $(C_PURPLE) $(OBJ) $(C_RESET)"
 
 fclean:
-	@ $(RM) -r $(NAME_release) $(NAME_debug) $(BUILD_DIR)
+	@ $(RM) -r $(NAME_release) $(NAME_debug) $(BUILD_DIR) ./lib/
 	@ $(LOG_TIME) "$(C_YELLOW) RM $(C_PURPLE) $(NAME_release) $(NAME_debug) \
 		$(C_RESET)"
 

@@ -4,10 +4,12 @@
 #include "Core.hpp"
 #include "Graphic.hpp"
 #include "Loader.hpp"
+#include "../Game/Entity.hpp"
 
 #include "Logger.hpp"
 
 #include <memory>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -47,9 +49,14 @@ core::Core::~Core()
 
 void core::Core::run() {
   Event event;
+  game::Entity entiti("pacman", "assets/Game/Pacman/Arena_full.png", "C", core::Vec2(20, 20), core::Vec2(10, 10));
+  std::vector<game::Entity>entities;
+  entities.push_back(entiti);
 
   this->graphicalTab[graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
+  this->graphicalTab[graphicLibIdx]->initGraphic(entities);
   while (this->graphicalTab[graphicLibIdx]->isOpen()) {
     this->graphicalTab[graphicLibIdx]->fillEvent(event);
+    this->graphicalTab[graphicLibIdx]->drawEntities(entities);
   }
 }

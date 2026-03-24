@@ -24,6 +24,8 @@ public:
   const core::Vec2 getStartPos() const { return _startPos; }
   const std::string getName() const { return _name; }
   const std::string getPath() const { return _texturePath; }
+  const std::string getAsciitexture() const { return _asciiTexture; }
+  const core::Vec2 getHitbox() const { return _hitBoxSize; }
   void setX(float x) { _pos.x = x; }
   void setY(float y) { _pos.y = y; }
   void setPos(float x, float y) {
