@@ -6,6 +6,7 @@
 #include "../Game/Game.hpp"
 #include "../Graphic/Graphic.hpp"
 #include "Entity.hpp"
+#include "Loader.hpp"
 
 namespace core {
 class Core {
@@ -16,6 +17,7 @@ public:
 
 private:
   std::vector<std::unique_ptr<graphic::IGraphic>> graphicalTab;
+  std::vector<std::shared_ptr<DLLoader<graphic::IGraphic>>> _graphLoadersTab;
   int graphicLibIdx = 0;
 
   std::vector<std::unique_ptr<game::IGame>> gameTab;

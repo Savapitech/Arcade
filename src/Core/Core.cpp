@@ -17,8 +17,9 @@ core::Core::Core(const std::string &graphicPath) {
       std::cout << "true" << std::endl;
     }
     try {
-      DLLoader<graphic::IGraphic> loader(entry.path().string());
-      this->graphicalTab.push_back(loader.getInstance("graphicEntryPoint"));
+      auto loader = std::make_shared<DLLoader<graphic::IGraphic>>(entry.path().string());
+      this->graphicalTab.push_back(loader->getInstance("graphicEntryPoint"));
+      this->_graphLoadersTab.push_back(loader);
       LOG_INFO("Load graphic tab");
       this->graphicLibIdx = 0;
       continue;
