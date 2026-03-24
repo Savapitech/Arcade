@@ -5,16 +5,20 @@
 
 #include "../Game/Game.hpp"
 #include "../Graphic/Graphic.hpp"
+#include "Loader.hpp"
 #include "Entity.hpp"
 
 namespace core {
 class Core {
 public:
   Core(const std::string &gamePath);
+  ~Core();
   void setSprite(const std::vector<game::Entity> &);
   void run();
 
 private:
+  
+  std::vector<std::unique_ptr<DLLoader<graphic::IGraphic>>> graphicLoader;
   std::vector<std::unique_ptr<graphic::IGraphic>> graphicalTab;
   int graphicLibIdx = 0;
 
