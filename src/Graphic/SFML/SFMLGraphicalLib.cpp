@@ -1,5 +1,5 @@
-#include <memory>
 #include <iostream>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>

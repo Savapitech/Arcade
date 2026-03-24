@@ -5,7 +5,6 @@
 
 #include "../Game/Game.hpp"
 #include "../Graphic/Graphic.hpp"
-#include "Loader.hpp"
 #include "Entity.hpp"
 #include "Loader.hpp"
 
@@ -18,7 +17,6 @@ public:
   void run();
 
 private:
-  
   std::vector<std::unique_ptr<DLLoader<graphic::IGraphic>>> graphicLoader;
   std::vector<std::unique_ptr<graphic::IGraphic>> graphicalTab;
   std::vector<std::shared_ptr<DLLoader<graphic::IGraphic>>> _graphLoadersTab;
