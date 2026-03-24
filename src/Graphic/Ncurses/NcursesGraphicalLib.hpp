@@ -36,4 +36,5 @@ public:
   void initGraphic(const std::vector<game::Entity> &) override;
   void drawEntities(const std::vector<game::Entity> &) override;
   void fillEvent(Event &event) override;
+  void destroyGraphic() override;
 };

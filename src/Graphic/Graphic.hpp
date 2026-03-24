@@ -14,6 +14,7 @@ public:
   virtual bool isOpen() = 0;
 
   virtual void initGraphic(const std::vector<game::Entity> &) = 0;
+  virtual void destroyGraphic() = 0;
   virtual void drawEntities(const std::vector<game::Entity> &) = 0;
   virtual void fillEvent(Event &event) = 0;
 

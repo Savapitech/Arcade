@@ -60,16 +60,18 @@ core::Core::~Core() {
   // this->gameTab.clear();
 }
 
-void core::Core::switchGraphicalLib(Event &ev)
+void core::Core::switchGraphicalLib(Event &ev, std::vector<game::Entity>& entities)
 {
   if (utils::containsKey(ev.getKeyStack(), core::Keys::P) == false)
     return;
 
   this->graphicalTab[graphicLibIdx]->closeWindow();
+  this->graphicalTab[graphicLibIdx]->destroyGraphic();
 
   graphicLibIdx++;
   graphicLibIdx = graphicLibIdx % this->graphicalTab.size();
 
+  this->graphicalTab[graphicLibIdx]->initGraphic(entities);
   this->graphicalTab[graphicLibIdx]->openWindow(1920, 1080, "arcade", ev);
 }
 
@@ -120,7 +122,7 @@ void core::Core::run() {
   this->graphicalTab[graphicLibIdx]->initGraphic(entities);
   while (this->graphicalTab[graphicLibIdx]->isOpen()) {
     this->graphicalTab[graphicLibIdx]->fillEvent(event);
-    this->switchGraphicalLib(event);
+    this->switchGraphicalLib(event, entities);
     this->graphicalTab[graphicLibIdx]->drawEntities(entities);
     /*-- TMP --*/
     event.clear();

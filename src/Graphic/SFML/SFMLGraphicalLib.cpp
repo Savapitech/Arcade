@@ -35,6 +35,11 @@ void SFML::initGraphic(const std::vector<game::Entity> &entities) {
   }
 }
 
+void SFML::destroyGraphic() {
+  this->_textureTab.clear();
+  this->_spriteTab.clear();
+}
+
 void SFML::drawEntities(const std::vector<game::Entity> &entities) {
   this->_window.clear();
   for (sf::Sprite &sprite : this->_spriteTab)

@@ -76,6 +76,10 @@ void Ncurses::initGraphic(const std::vector<game::Entity> &entities) {
   }
 }
 
+void Ncurses::destroyGraphic() {
+  this->_dataTab.clear();
+}
+
 void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
   erase();
   for (NcursesData &data : this->_dataTab) {
