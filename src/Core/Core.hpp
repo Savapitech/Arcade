@@ -14,16 +14,17 @@ public:
   Core(const std::string &gamePath);
   ~Core();
   void setSprite(const std::vector<game::Entity> &);
+  void switchGraphicalLib(Event &ev);
   void run();
 
 private:
   std::vector<std::unique_ptr<DLLoader<graphic::IGraphic>>> graphicLoader;
   std::vector<std::unique_ptr<graphic::IGraphic>> graphicalTab;
   std::vector<std::shared_ptr<DLLoader<graphic::IGraphic>>> _graphLoadersTab;
-  int graphicLibIdx = 0;
+  int graphicLibIdx;
 
   std::vector<std::unique_ptr<game::IGame>> gameTab;
-  int gameLibIdx = 0;
+  int gameLibIdx;
 };
 } // namespace core
 

@@ -17,6 +17,7 @@ private:
   bool close = false;
 
 public:
+  void clear(void){while(!keyStack.empty())keyStack.pop();}
   const core::Vec2 getMouseCoord();
   void updateMouseCoord(core::Vec2);
   bool isClicked();
