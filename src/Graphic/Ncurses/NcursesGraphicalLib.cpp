@@ -2,6 +2,7 @@
 #include <map>
 #include <ncurses.h>
 #include <ostream>
+#include <string>
 
 #include "../../Core/Utils.hpp"
 #include "NcursesGraphicalLib.hpp"
@@ -10,14 +11,41 @@ NcursesData::NcursesData(const std::string &ascii, core::Vec2 pos,
                          core::Vec2 hitbox)
     : _asciiTexture(ascii), _pos(pos), _hitbox(hitbox) {}
 
+void myPrintw(core::Vec2 pos, std::string asciiTexture) {
+  static const std::map<std::string, int> mapColors{
+      {"\e[0;30m", 8}, {"\e[0;31m", 1}, {"\e[0;32m", 2}, {"\e[0;33m", 3},
+      {"\e[0;34m", 4}, {"\e[0;35m", 5}, {"\e[0;36m", 6}, {"\e[0;37m", 7},
+  };
+
+  auto sep = asciiTexture.find("|");
+  std::string color = asciiTexture.substr(0, sep);
+  asciiTexture.erase(0, sep + 1);
+  auto it = mapColors.find(color);
+  if (it != mapColors.end()) {
+    attron(COLOR_PAIR(it->second));
+    mvprintw(static_cast<int>(pos.y), static_cast<int>(pos.x), "%s",
+             asciiTexture.c_str());
+    attroff(COLOR_PAIR(it->second));
+  }
+}
+
 void Ncurses::openWindow(size_t heigth, size_t width,
                          const std::string &windowName, Event &event) {
   initscr();
   noecho();
   cbreak();
   keypad(stdscr, TRUE);
-  // resizeterm(heigth, width);
-  std::cout << "\033]0;" << windowName << std::flush;
+  start_color();
+  init_pair(8, COLOR_BLACK, COLOR_BLACK);
+  init_pair(1, COLOR_RED, COLOR_BLACK);
+  init_pair(2, COLOR_GREEN, COLOR_BLACK);
+  init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+  init_pair(4, COLOR_BLUE, COLOR_BLACK);
+  init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+  init_pair(6, COLOR_CYAN, COLOR_BLACK);
+  init_pair(7, COLOR_WHITE, COLOR_BLACK);
+  resizeterm(heigth, width);
+  // std::cout << "\033]0;" << windowName << std::flush;
   curs_set(0);
   refresh();
   this->_isopen = true;
@@ -37,9 +65,11 @@ void Ncurses::initGraphic(const std::vector<game::Entity> &entities) {
 }
 
 void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
+  clear();
   for (NcursesData &data : this->_dataTab) {
-    std::cout << "Data stored : " << data.getAsciiTexture() << std::endl;
+    myPrintw(data.getPos(), data.getAsciiTexture());
   }
+  refresh();
 }
 
 bool Ncurses::isOpen() { return this->_isopen; }

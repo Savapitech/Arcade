@@ -50,10 +50,13 @@ core::Core::~Core() {
 
 void core::Core::run() {
   Event event;
-  game::Entity entiti("pacman", "assets/Game/Pacman/Arena_full.png", "C",
-                      core::Vec2(20, 20), core::Vec2(10, 10));
+  game::Entity entiti("pacman", "assets/Game/Pacman/Arena_full.png",
+                      "\e[0;33m|C", core::Vec2(15, 11), core::Vec2(10, 10));
+  game::Entity entitie("pacmon", "assets/Game/Pacman/Arena_empty.png",
+                       "\e[0;34m|[]", core::Vec2(10, 10), core::Vec2(10, 10));
   std::vector<game::Entity> entities;
   entities.push_back(entiti);
+  entities.push_back(entitie);
 
   this->graphicalTab[graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
   this->graphicalTab[graphicLibIdx]->initGraphic(entities);
