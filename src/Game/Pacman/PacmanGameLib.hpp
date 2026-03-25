@@ -6,5 +6,5 @@
 class PacmanGame : public game::AGame {
 public:
   void initGame() override;
-  void simulateGame() override;
+  void simulateGame(Event &e) override {};
 };
