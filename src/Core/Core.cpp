@@ -20,9 +20,12 @@ core::Core::Core(const std::string &graphicPath)
     if (entry.path().extension() != ".so")
       throw std::runtime_error("Failed while loading lib");
 
-    if (entry.path().string() == graphicPath)
+    if (entry.path().string() == graphicPath){
+      LOG_DEBUG("Graphic Lib:" + std::to_string(libIdx));
+      LOG_DEBUG("First Lib:[" + entry.path().string() + " == " + graphicPath + "]");
       this->_graphicLibIdx = libIdx;
-    libIdx++;
+    }
+
     try {
       this->_graphicLoader.push_back(
           std::make_unique<DLLoader<graphic::IGraphic>>(entry.path().string()));
@@ -30,14 +33,13 @@ core::Core::Core(const std::string &graphicPath)
       if (graphical == nullptr)
         throw std::runtime_error("Failed while loading lib");
       this->_graphicalTab.push_back(std::move(graphical));
-      this->_graphicLibIdx = 0;
       LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
+      libIdx++;
       continue;
     } catch (const std::exception &e) {
     try {
       this->_gameLoader.push_back(std::make_unique<DLLoader<game::IGame>>(entry.path().string()));
       this->_gameTab.push_back(_gameLoader.back()->getInstance("gameEntryPoint"));
-      this->_graphicLibIdx = 0;
       LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
     } catch (const std::exception &e) {
       throw std::runtime_error("Failed while loading lib");
@@ -69,6 +71,7 @@ void core::Core::switchGraphicalLib(Event &ev,
 void core::Core::run() {
   Event event;
 
+  LOG_DEBUG("Graphic:" + std::to_string(_graphicLibIdx));
   this->_graphicalTab[_graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
   this->_gameTab[_gameLibIdx]->initGame();
   this->_graphicalTab[_graphicLibIdx]->initGraphic(this->_gameTab[_gameLibIdx]->getEntities());
@@ -80,4 +83,6 @@ void core::Core::run() {
     this->switchGraphicalLib(event, this->_gameTab[_gameLibIdx]->getEntities());
     /*-- TMP --*/
   }
+  this->_graphicalTab[_graphicLibIdx]->destroyGraphic();
+  this->_graphicalTab[_graphicLibIdx]->closeWindow();
 }

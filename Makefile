@@ -9,9 +9,7 @@ SRC_SFML := $(wildcard src/Graphic/SFML/*.cpp)
 SRC_NCURSES := $(wildcard src/Graphic/Ncurses/*.cpp)
 
 SRC_PACMAN := $(wildcard src/Game/Pacman/*.cpp)
-ifeq ($(shell uname),Darwin)
-  SRC_PACMAN += src/Game/Entity.cpp
-endif
+SRC_PACMAN += src/Game/Entity.cpp
 
 BUILD_DIR := .build
 
