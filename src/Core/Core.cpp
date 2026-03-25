@@ -117,16 +117,14 @@ void core::Core::run() {
                                "\e[0;31m|A", core::Vec2(350, 190),
                                core::Vec2(350, 190));
   game::Entity blueGhost_entity("pacman", "assets/Game/Pacman/BlueGhost.png",
-                               "\e[0;36m|A", core::Vec2(330, 190),
-                               core::Vec2(330, 190));
-  game::Entity orangeGhost_entity("pacman", "assets/Game/Pacman/OrangeGhost.png",
-                               "\e[0;33m|A", core::Vec2(350, 170),
-                               core::Vec2(350, 170));
+                                "\e[0;36m|A", core::Vec2(330, 190),
+                                core::Vec2(330, 190));
+  game::Entity orangeGhost_entity(
+      "pacman", "assets/Game/Pacman/OrangeGhost.png", "\e[0;33m|A",
+      core::Vec2(350, 170), core::Vec2(350, 170));
   game::Entity pinkGhost_entity("pacman", "assets/Game/Pacman/PinkGhost.png",
-                               "\e[0;35m|A", core::Vec2(330, 170),
-                               core::Vec2(330, 170));
-
-
+                                "\e[0;35m|A", core::Vec2(330, 170),
+                                core::Vec2(330, 170));
 
   std::vector<game::Entity> entities;
   entities.push_back(arena_entity);

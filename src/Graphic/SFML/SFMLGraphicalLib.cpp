@@ -50,6 +50,13 @@ void SFML::drawEntities(const std::vector<game::Entity> &entities) {
 }
 
 void SFML::fillEvent(Event &event) {
+  while (const std::optional eventWindow = this->_window.pollEvent()) {
+    if (eventWindow->is<sf::Event::Closed>()) {
+      this->_window.close();
+      event.setCloseState(false);
+    }
+  }
+
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
     event.addKey(core::Keys::A);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::B))
@@ -128,11 +135,6 @@ void SFML::fillEvent(Event &event) {
     event.addKey(core::Keys::Space);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
     event.addKey(core::Keys::Enter);
-
-  while (const std::optional eventWindow = this->_window.pollEvent())
-    if (eventWindow->is<sf::Event::Closed>())
-      this->_window.close();
-  event.setCloseState(false);
 }
 
 SFML::~SFML() {
