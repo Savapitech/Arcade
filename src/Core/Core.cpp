@@ -142,7 +142,6 @@ void core::Core::run() {
     event.clear();
     this->graphicalTab[graphicLibIdx]->fillEvent(event);
     this->graphicalTab[graphicLibIdx]->drawEntities(entities);
-    std::cerr << graphicLibIdx << std::endl;
     /*-- TMP --*/
     this->switchGraphicalLib(event, entities);
     /*-- TMP --*/
