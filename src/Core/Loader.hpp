@@ -1,9 +1,7 @@
 #pragma once
 
 #include <dlfcn.h>
-#include <iostream>
 #include <memory>
-#include <ostream>
 #include <string>
 
 template <typename T> class DLLoader {
@@ -14,7 +12,6 @@ public:
   DLLoader(const std::string &path) : _handle(nullptr), _path(path) {
     _handle = dlopen(_path.c_str(), RTLD_LAZY);
 
-    std::cout << _path.c_str() << std::endl;
     if (_handle == nullptr)
       throw std::runtime_error(dlerror());
   }

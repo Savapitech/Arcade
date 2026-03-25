@@ -2,8 +2,6 @@
 #include <ostream>
 
 #include "Core.hpp"
-#include "Graphic.hpp"
-#include "Loader.hpp"
 #include "Logger.hpp"
 
 #define SUCCESS 0;
@@ -19,7 +17,6 @@ int main(int ac, char **av) {
     core.run();
 
     try {
-      std::cout << "arcade in progress" << std::endl;
     } catch (const std::exception &e) {
       return std::cerr << e.what() << std::endl, FAILURE
     }

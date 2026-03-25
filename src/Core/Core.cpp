@@ -20,15 +20,11 @@ core::Core::Core(const std::string &graphicPath)
   int libIdx = 0;
 
   for (const auto &entry : fs::directory_iterator(path)) {
-    std::cout << "Lib: " << entry.path().string() << std::endl;
     if (entry.path().extension() != ".so")
       throw std::runtime_error("Failed while loading lib");
 
-    if (entry.path().string() == graphicPath) {
+    if (entry.path().string() == graphicPath)
       this->graphicLibIdx = libIdx;
-      LOG_INFO("Graphic:" + std::to_string(this->graphicLibIdx) + "<" +
-               entry.path().string() + ">");
-    }
     libIdx++;
     try {
       this->graphicLoader.push_back(
@@ -36,7 +32,7 @@ core::Core::Core(const std::string &graphicPath)
       this->graphicalTab.push_back(
           graphicLoader.back()->getInstance("graphicEntryPoint"));
       this->graphicLibIdx = 0;
-      LOG_INFO("Load graphic tab");
+      LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
       continue;
     } catch (const std::exception &e) {
     }
