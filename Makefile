@@ -8,6 +8,11 @@ SRC += $(wildcard src/*/*.cpp)
 SRC_SFML := $(wildcard src/Graphic/SFML/*.cpp)
 SRC_NCURSES := $(wildcard src/Graphic/Ncurses/*.cpp)
 
+SRC_PACMAN := $(wildcard src/Game/Pacman/*.cpp)
+ifeq ($(shell uname),Darwin)
+  SRC_PACMAN += src/Game/Entity.cpp
+endif
+
 BUILD_DIR := .build
 
 CXXFLAGS += -Wall -Wextra -Werror=write-strings -g
@@ -50,14 +55,17 @@ endef
 $(eval $(call mk-profile, core, SRC, , $(BIN_NAME)))
 $(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared -fPIC, lib/arcade_sfml.so))
 $(eval $(call mk-profile, ncurses, SRC_NCURSES, $(NCURSES_LDFLAGS) -shared -fPIC, lib/arcade_ncurses.so))
+$(eval $(call mk-profile, pacman, SRC_PACMAN, -shared -fPIC, lib/arcade_pacman.so))
 $(eval $(call mk-profile, debug, SRC, -D DEBUG_MODE -lasan -fanalyzer -g3, debug))
 $(eval $(call mk-profile, test, SRC, , test))
 
 core: $(NAME_core)
 
+games: $(NAME_pacman)
+
 graphicals: $(NAME_sfml) $(NAME_ncurses)
 
-all: core graphicals
+all: core graphicals games
 
 tests: $(NAME_test)
 	@ bash tests/run_all.sh

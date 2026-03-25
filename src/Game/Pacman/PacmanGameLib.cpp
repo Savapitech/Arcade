@@ -1,6 +1,5 @@
-
-
 #include "PacmanGameLib.hpp"
+#include "Game/Game.hpp"
 
 void PacmanGame::initGame() {
   game::Entity arena_entity(
@@ -54,3 +53,5 @@ void PacmanGame::initGame() {
                                 "\e[0;35m|A", core::Vec2(330, 170),
                                 core::Vec2(330, 170));
 }
+
+extern "C" game::IGame *gameEntryPoint() { return new PacmanGame(); }
