@@ -32,7 +32,11 @@ void myPrintw(core::Vec2 pos, std::string asciiTexture) {
   auto it = mapColors.find(color);
   if (it != mapColors.end()) {
     attron(COLOR_PAIR(it->second));
-    custom_print(pos, asciiTexture);
+    auto linebreak = asciiTexture.find("|");
+    if (linebreak != std::string::npos)
+      custom_print(pos, asciiTexture);
+    else
+      mvprintw((int)pos.y / 8, (int)pos.x / 4, "%s", asciiTexture.c_str());
     attroff(COLOR_PAIR(it->second));
   }
 }
@@ -76,9 +80,7 @@ void Ncurses::initGraphic(const std::vector<game::Entity> &entities) {
   }
 }
 
-void Ncurses::destroyGraphic() {
-  this->_dataTab.clear();
-}
+void Ncurses::destroyGraphic() { this->_dataTab.clear(); }
 
 void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
   erase();

@@ -12,24 +12,22 @@
 
 #include "Utils.hpp"
 
-
 namespace fs = std::filesystem;
 
-core::Core::Core(const std::string &graphicPath) : 
-  graphicLibIdx(0),
-  gameLibIdx(0)
-  {
+core::Core::Core(const std::string &graphicPath)
+    : graphicLibIdx(0), gameLibIdx(0) {
   std::string path = "./lib/";
   int libIdx = 0;
 
   for (const auto &entry : fs::directory_iterator(path)) {
-     std::cout << "Lib: " << entry.path().string() << std::endl;
+    std::cout << "Lib: " << entry.path().string() << std::endl;
     if (entry.path().extension() != ".so")
       throw std::runtime_error("Failed while loading lib");
 
     if (entry.path().string() == graphicPath) {
       this->graphicLibIdx = libIdx;
-      LOG_INFO("Graphic:" + std::to_string(this->graphicLibIdx) + "<" + entry.path().string() + ">");
+      LOG_INFO("Graphic:" + std::to_string(this->graphicLibIdx) + "<" +
+               entry.path().string() + ">");
     }
     libIdx++;
     try {
@@ -60,8 +58,8 @@ core::Core::~Core() {
   // this->gameTab.clear();
 }
 
-void core::Core::switchGraphicalLib(Event &ev, std::vector<game::Entity>& entities)
-{
+void core::Core::switchGraphicalLib(Event &ev,
+                                    std::vector<game::Entity> &entities) {
   if (utils::containsKey(ev.getKeyStack(), core::Keys::P) == false)
     return;
 
@@ -77,10 +75,8 @@ void core::Core::switchGraphicalLib(Event &ev, std::vector<game::Entity>& entiti
 
 void core::Core::run() {
   Event event;
-  game::Entity entiti("pacman", "assets/Game/Pacman/Arena_full.png",
-                      "\e[0;33m|C", core::Vec2(100, 100), core::Vec2(10, 10));
-  game::Entity entitie(
-      "pacmon", "assets/Game/Pacman/Arena_Empty.png",
+  game::Entity arena_entity(
+      "arena", "assets/Game/Pacman/Arena_Empty.png",
       "\e[0;34m|"
       "########################################################|"
       "##                        ####                        ##|"
@@ -94,10 +90,10 @@ void core::Core::run() {
       "############  ##########  ####  ##########  ############|"
       "          ##  ##########  ####  ##########  ####        |"
       "          ##  ####                    ####  ####        |"
-      "          ##  ####  ########  ######  ####  ####        |"
-      "############  ####  ####          ##  ####  ############|"
-      "                    ####          ##                    |"
-      "############  ####  ####          ##  ####  ############|"
+      "          ##  ####  #######  #######  ####  ####        |"
+      "############  ####  ###          ###  ####  ############|"
+      "                    ###          ###                    |"
+      "############  ####  ###          ###  ####  ############|"
       "          ##  ####  ################  ####  ####        |"
       "          ##  ####                    ####  ####        |"
       "          ##  ####  ################  ####  ####        |"
@@ -113,10 +109,32 @@ void core::Core::run() {
       "##  ####################  ####  ####################  ##|"
       "##                                                    ##|"
       "########################################################|",
-      core::Vec2(10, 10), core::Vec2(10, 10));
+      core::Vec2(230, 70), core::Vec2(230, 70));
+  game::Entity pacman_entity("pacman", "assets/Game/Pacman/Pacman.png",
+                             "\e[0;33m|C", core::Vec2(340, 200),
+                             core::Vec2(340, 200));
+  game::Entity redGhost_entity("pacman", "assets/Game/Pacman/RedGhost.png",
+                               "\e[0;31m|A", core::Vec2(350, 190),
+                               core::Vec2(350, 190));
+  game::Entity blueGhost_entity("pacman", "assets/Game/Pacman/BlueGhost.png",
+                               "\e[0;36m|A", core::Vec2(330, 190),
+                               core::Vec2(330, 190));
+  game::Entity orangeGhost_entity("pacman", "assets/Game/Pacman/OrangeGhost.png",
+                               "\e[0;33m|A", core::Vec2(350, 170),
+                               core::Vec2(350, 170));
+  game::Entity pinkGhost_entity("pacman", "assets/Game/Pacman/PinkGhost.png",
+                               "\e[0;35m|A", core::Vec2(330, 170),
+                               core::Vec2(330, 170));
+
+
+
   std::vector<game::Entity> entities;
-  entities.push_back(entiti);
-  entities.push_back(entitie);
+  entities.push_back(arena_entity);
+  entities.push_back(pacman_entity);
+  entities.push_back(redGhost_entity);
+  entities.push_back(blueGhost_entity);
+  entities.push_back(orangeGhost_entity);
+  entities.push_back(pinkGhost_entity);
 
   this->graphicalTab[graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
   this->graphicalTab[graphicLibIdx]->initGraphic(entities);

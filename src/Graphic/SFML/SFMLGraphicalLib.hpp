@@ -21,7 +21,7 @@ public:
   void initGraphic(const std::vector<game::Entity> &) override;
   void drawEntities(const std::vector<game::Entity> &) override;
   void fillEvent(Event &event) override;
-   virtual void destroyGraphic() override;
+  virtual void destroyGraphic() override;
 
   ~SFML() override;
 };

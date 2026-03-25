@@ -15,27 +15,24 @@ public:
 
 } // namespace core
 
+namespace utils {
+inline bool containsKey(std::stack<core::Keys> &myStack, core::Keys keyToFind) {
+  std::stack<core::Keys> tempStack;
+  bool found = false;
 
-namespace utils 
-{
-  inline bool containsKey(std::stack<core::Keys>& myStack, core::Keys keyToFind) 
-{
-    std::stack<core::Keys> tempStack;
-    bool found = false;
-
-    while (!myStack.empty()) {
-        if (myStack.top() == keyToFind) {
-            found = true;
-            break;
-        }
-        tempStack.push(myStack.top());
-        myStack.pop();
+  while (!myStack.empty()) {
+    if (myStack.top() == keyToFind) {
+      found = true;
+      break;
     }
-    while (!tempStack.empty()) {
-        myStack.push(tempStack.top());
-        tempStack.pop();
-    }
+    tempStack.push(myStack.top());
+    myStack.pop();
+  }
+  while (!tempStack.empty()) {
+    myStack.push(tempStack.top());
+    tempStack.pop();
+  }
 
-    return found;
+  return found;
 }
-}
+} // namespace utils
