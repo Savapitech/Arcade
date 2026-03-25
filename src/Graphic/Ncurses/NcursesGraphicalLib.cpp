@@ -2,6 +2,7 @@
 #include <map>
 #include <ncurses.h>
 #include <ostream>
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -9,14 +10,18 @@
 #include "NcursesGraphicalLib.hpp"
 
 void custom_print(core::Vec2 pos, std::string asciiTexture) {
-  int sep = 0;
-  int y = static_cast<int>(pos.y) / 8;
-  int x = static_cast<int>(pos.x) / 4;
-  while (sep < static_cast<int>(asciiTexture.size())) {
-    sep = asciiTexture.find("|");
+  int y = static_cast<int>(pos.y) / 16;
+  int x = static_cast<int>(pos.x) / 8;
+  size_t sep = 0;
+
+  while ((sep = asciiTexture.find("|")) != std::string::npos) {
     mvprintw(y, x, "%s", asciiTexture.substr(0, sep).c_str());
     asciiTexture.erase(0, sep + 1);
     y++;
+  }
+  
+  if (!asciiTexture.empty()) {
+    mvprintw(y, x, "%s", asciiTexture.c_str());
   }
 }
 
@@ -74,6 +79,8 @@ void Ncurses::closeWindow() {
 }
 
 void Ncurses::initGraphic(const std::vector<game::Entity> &entities) {
+  this->_dataTab.clear();
+
   for (auto &entity : entities) {
     this->_dataTab.push_back(NcursesData(
         entity.getAsciitexture(), entity.getStartPos(), entity.getHitbox()));
@@ -84,11 +91,16 @@ void Ncurses::destroyGraphic() { this->_dataTab.clear(); }
 
 void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
   erase();
+  std::cerr << "Start Draw Entities NCURSES\n";
   for (NcursesData &data : this->_dataTab) {
+    std::cerr << "Draw Entities NCURSES\n";
     myPrintw(data.getPos(), data.getAsciiTexture());
   }
   refresh();
+   std::cerr << "Out\n";
 }
+
+
 
 bool Ncurses::isOpen() { return this->_isopen; }
 

@@ -12,7 +12,6 @@ void SFML::openWindow(size_t heigth, size_t width,
   sf::VideoMode video(
       {static_cast<unsigned int>(heigth), static_cast<unsigned int>(width)});
   this->_window.create(video, windowName);
-  this->_window.requestFocus();
   event.setCloseState(true);
 }
 
@@ -24,6 +23,9 @@ void SFML::closeWindow() {
 bool SFML::isOpen() { return this->_window.isOpen(); }
 
 void SFML::initGraphic(const std::vector<game::Entity> &entities) {
+  this->_spriteTab.clear();
+  this->_textureTab.clear();
+
   this->_textureTab.reserve(entities.size());
   this->_spriteTab.reserve(entities.size());
 
