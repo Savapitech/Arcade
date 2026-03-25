@@ -91,13 +91,10 @@ void Ncurses::destroyGraphic() { this->_dataTab.clear(); }
 
 void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
   erase();
-  std::cerr << "Start Draw Entities NCURSES\n";
   for (NcursesData &data : this->_dataTab) {
-    std::cerr << "Draw Entities NCURSES\n";
     myPrintw(data.getPos(), data.getAsciiTexture());
   }
   refresh();
-   std::cerr << "Out\n";
 }
 
 

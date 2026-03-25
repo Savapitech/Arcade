@@ -63,20 +63,14 @@ void core::Core::switchGraphicalLib(Event &ev,
   if (utils::containsKey(ev.getKeyStack(), core::Keys::P) == false)
     return;
 
-  std::cerr << "Switch" << std::endl;
-
   this->graphicalTab[graphicLibIdx]->destroyGraphic();
-  std::cerr << "Destroy Graph" << std::endl;
   this->graphicalTab[graphicLibIdx]->closeWindow();
-  std::cerr << "Close Window" << std::endl;
 
   graphicLibIdx++;
   graphicLibIdx = graphicLibIdx % this->graphicalTab.size();
 
   this->graphicalTab[graphicLibIdx]->openWindow(1920, 1080, "arcade", ev);
-  std::cerr << "Open Window" << std::endl;
   this->graphicalTab[graphicLibIdx]->initGraphic(entities);
-  std::cerr << "OVER\n"; 
 }
 
 void core::Core::run() {
@@ -145,17 +139,12 @@ void core::Core::run() {
   this->graphicalTab[graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
   this->graphicalTab[graphicLibIdx]->initGraphic(entities);
   while (this->graphicalTab[graphicLibIdx]->isOpen()) {
-    std::cerr << "Run" << std::endl;
     event.clear();
-    std::cerr << "Run1" << std::endl;
     this->graphicalTab[graphicLibIdx]->fillEvent(event);
-    std::cerr << "Run2" << std::endl;
     this->graphicalTab[graphicLibIdx]->drawEntities(entities);
-    std::cerr << "Run3" << std::endl;
     std::cerr << graphicLibIdx << std::endl;
     /*-- TMP --*/
     this->switchGraphicalLib(event, entities);
     /*-- TMP --*/
   }
-  std::cerr << "Tranquillle\n";
 }
