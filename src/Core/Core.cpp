@@ -26,7 +26,8 @@ core::Core::Core(const std::string &graphicPath)
     try {
       this->_graphicLoader.push_back(
           std::make_unique<DLLoader<graphic::IGraphic>>(entry.path().string()));
-      std::unique_ptr<graphic::IGraphic> graphical = _graphicLoader.back()->getInstance("graphicEntryPoint");
+      std::unique_ptr<graphic::IGraphic> graphical =
+          _graphicLoader.back()->getInstance("graphicEntryPoint");
       if (graphical == nullptr)
         throw std::runtime_error("Failed while loading lib");
       this->_graphicalTab.push_back(std::move(graphical));
@@ -34,13 +35,15 @@ core::Core::Core(const std::string &graphicPath)
       LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
       continue;
     } catch (const std::exception &e) {
-    try {
-      this->_gameLoader.push_back(std::make_unique<DLLoader<game::IGame>>(entry.path().string()));
-      this->_gameTab.push_back(_gameLoader.back()->getInstance("gameEntryPoint"));
-      this->_graphicLibIdx = 0;
-      LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
-    } catch (const std::exception &e) {
-      throw std::runtime_error("Failed while loading lib");
+      try {
+        this->_gameLoader.push_back(
+            std::make_unique<DLLoader<game::IGame>>(entry.path().string()));
+        this->_gameTab.push_back(
+            _gameLoader.back()->getInstance("gameEntryPoint"));
+        this->_graphicLibIdx = 0;
+        LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
+      } catch (const std::exception &e) {
+        throw std::runtime_error("Failed while loading lib");
       }
     }
   }
@@ -71,11 +74,13 @@ void core::Core::run() {
 
   this->_graphicalTab[_graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
   this->_gameTab[_gameLibIdx]->initGame();
-  this->_graphicalTab[_graphicLibIdx]->initGraphic(this->_gameTab[_gameLibIdx]->getEntities());
+  this->_graphicalTab[_graphicLibIdx]->initGraphic(
+      this->_gameTab[_gameLibIdx]->getEntities());
   while (this->_graphicalTab[_graphicLibIdx]->isOpen()) {
     event.clear();
     this->_graphicalTab[_graphicLibIdx]->fillEvent(event);
-    this->_graphicalTab[_graphicLibIdx]->drawEntities(this->_gameTab[_gameLibIdx]->getEntities());
+    this->_graphicalTab[_graphicLibIdx]->drawEntities(
+        this->_gameTab[_gameLibIdx]->getEntities());
     /*-- TMP --*/
     this->switchGraphicalLib(event, this->_gameTab[_gameLibIdx]->getEntities());
     /*-- TMP --*/
