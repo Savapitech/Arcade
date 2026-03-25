@@ -22,7 +22,7 @@ private:
   std::vector<std::unique_ptr<graphic::IGraphic>> _graphicalTab;
   int _graphicLibIdx;
 
-  std::vector<std::unique_ptr<DLLoader<graphic::IGraphic>>> _gameLoader;
+  std::vector<std::unique_ptr<DLLoader<game::IGame>>> _gameLoader;
   std::vector<std::unique_ptr<game::IGame>> _gameTab;
   int _gameLibIdx;
 };

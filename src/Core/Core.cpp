@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <memory>
 
 #include "Core.hpp"
 #include "Game/Entity.hpp"
@@ -25,21 +26,22 @@ core::Core::Core(const std::string &graphicPath)
     try {
       this->_graphicLoader.push_back(
           std::make_unique<DLLoader<graphic::IGraphic>>(entry.path().string()));
-      this->_graphicalTab.push_back(
-          _graphicLoader.back()->getInstance("graphicEntryPoint"));
+      std::unique_ptr<graphic::IGraphic> graphical = _graphicLoader.back()->getInstance("graphicEntryPoint");
+      if (graphical == nullptr)
+        throw std::runtime_error("Failed while loading lib");
+      this->_graphicalTab.push_back(std::move(graphical));
       this->_graphicLibIdx = 0;
       LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
       continue;
     } catch (const std::exception &e) {
-      throw std::runtime_error("Failed while loading lib");
-    }
-
     try {
-      DLLoader<game::IGame> loader(entry.path().string());
-      LOG_INFO("Load game tab");
-      this->_gameTab.push_back(loader.getInstance("gameEntryPoint"));
+      this->_gameLoader.push_back(std::make_unique<DLLoader<game::IGame>>(entry.path().string()));
+      this->_gameTab.push_back(_gameLoader.back()->getInstance("gameEntryPoint"));
+      this->_graphicLibIdx = 0;
+      LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
     } catch (const std::exception &e) {
       throw std::runtime_error("Failed while loading lib");
+      }
     }
   }
 }
