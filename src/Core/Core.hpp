@@ -18,13 +18,13 @@ public:
   void run();
 
 private:
-  std::vector<std::unique_ptr<DLLoader<graphic::IGraphic>>> graphicLoader;
-  std::vector<std::unique_ptr<graphic::IGraphic>> graphicalTab;
-  std::vector<std::shared_ptr<DLLoader<graphic::IGraphic>>> _graphLoadersTab;
-  int graphicLibIdx;
+  std::vector<std::unique_ptr<DLLoader<graphic::IGraphic>>> _graphicLoader;
+  std::vector<std::unique_ptr<graphic::IGraphic>> _graphicalTab;
+  int _graphicLibIdx;
 
-  std::vector<std::unique_ptr<game::IGame>> gameTab;
-  int gameLibIdx;
+  std::vector<std::unique_ptr<DLLoader<graphic::IGraphic>>> _gameLoader;
+  std::vector<std::unique_ptr<game::IGame>> _gameTab;
+  int _gameLibIdx;
 };
 } // namespace core
 
