@@ -2,7 +2,6 @@
 #include <map>
 #include <ncurses.h>
 #include <ostream>
-#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -19,7 +18,7 @@ void custom_print(core::Vec2 pos, std::string asciiTexture) {
     asciiTexture.erase(0, sep + 1);
     y++;
   }
-  
+
   if (!asciiTexture.empty()) {
     mvprintw(y, x, "%s", asciiTexture.c_str());
   }
@@ -41,7 +40,7 @@ void myPrintw(core::Vec2 pos, std::string asciiTexture) {
     if (linebreak != std::string::npos)
       custom_print(pos, asciiTexture);
     else
-      mvprintw((int)pos.y / 8, (int)pos.x / 4, "%s", asciiTexture.c_str());
+      mvprintw((int)pos.y / 16, (int)pos.x / 8, "%s", asciiTexture.c_str());
     attroff(COLOR_PAIR(it->second));
   }
 }
@@ -96,8 +95,6 @@ void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
   }
   refresh();
 }
-
-
 
 bool Ncurses::isOpen() { return this->_isopen; }
 
