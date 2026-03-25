@@ -14,7 +14,7 @@ public:
   Core(const std::string &gamePath);
   ~Core();
   void setSprite(const std::vector<game::Entity> &);
-  void switchGraphicalLib(Event &ev, std::vector<game::Entity> &entities);
+  void switchGraphicalLib(Event &ev, const std::vector<game::Entity> &entities);
   void run();
 
 private:

@@ -52,6 +52,13 @@ void PacmanGame::initGame() {
   game::Entity pinkGhost_entity("pacman", "assets/Game/Pacman/PinkGhost.png",
                                 "\e[0;35m|A", core::Vec2(330, 170),
                                 core::Vec2(330, 170));
+
+  _entities.push_back(arena_entity);
+  _entities.push_back(pacman_entity);
+  _entities.push_back(redGhost_entity);
+  _entities.push_back(blueGhost_entity);
+  _entities.push_back(orangeGhost_entity);
+  _entities.push_back(pinkGhost_entity);
 }
 
 extern "C" game::IGame *gameEntryPoint() { return new PacmanGame(); }
