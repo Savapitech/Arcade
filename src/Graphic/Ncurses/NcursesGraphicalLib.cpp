@@ -37,7 +37,8 @@ void myPrintw(core::Vec2 pos, std::string asciiTexture) {
     if (linebreak != std::string::npos)
       custom_print(pos, asciiTexture);
     else
-      mvprintw(((int)pos.y / CHAR_Y_SIZE), ((int)pos.x / CHAR_X_SIZE), "%s", asciiTexture.c_str());
+      mvprintw(((int)pos.y / CHAR_Y_SIZE), ((int)pos.x / CHAR_X_SIZE), "%s",
+               asciiTexture.c_str());
     attroff(COLOR_PAIR(it->second));
   }
 }
@@ -88,14 +89,12 @@ void Ncurses::destroyGraphic() { this->_dataTab.clear(); }
 void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
   erase();
   this->_dataTab.clear();
-  for (auto &entity : entities) {
+  for (auto &entity : entities)
     this->_dataTab.push_back(NcursesData(entity.getAsciitexture(),
                                          entity.getPos(), entity.getHitbox()));
-  }
 
-  for (NcursesData &data : this->_dataTab) {
+  for (NcursesData &data : this->_dataTab)
     myPrintw(data.getPos(), data.getAsciiTexture());
-  }
   refresh();
 }
 

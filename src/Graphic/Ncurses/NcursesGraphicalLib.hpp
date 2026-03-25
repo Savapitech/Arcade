@@ -9,7 +9,6 @@
 #define CHAR_Y_SIZE 16
 #define CHAR_X_SIZE 8
 
-
 class NcursesData {
 private:
   std::string _asciiTexture;

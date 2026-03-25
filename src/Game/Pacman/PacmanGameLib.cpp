@@ -4,7 +4,6 @@
 #include "Core/Utils.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Game.hpp"
-#include <iostream>
 
 void PacmanGame::initGame() {
   game::Entity arena_entity(

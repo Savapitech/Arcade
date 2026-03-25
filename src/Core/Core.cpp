@@ -20,7 +20,7 @@ core::Core::Core(const std::string &graphicPath)
     if (entry.path().extension() != ".so")
       throw std::runtime_error("Failed while loading lib");
 
-    if (entry.path().string() == graphicPath) {
+    if (entry.path().string().find(graphicPath) != std::string::npos) {
       LOG_DEBUG("Graphic Lib:" + std::to_string(libIdx));
       LOG_DEBUG("First Lib:[" + entry.path().string() + " == " + graphicPath +
                 "]");
@@ -80,10 +80,13 @@ void core::Core::run() {
   this->_gameTab[_gameLibIdx]->initGame();
   this->_graphicalTab[_graphicLibIdx]->initGraphic(
       this->_gameTab[_gameLibIdx]->getEntities());
+
   while (this->_graphicalTab[_graphicLibIdx]->isOpen()) {
     event.clear();
     this->_graphicalTab[_graphicLibIdx]->fillEvent(event);
+
     this->_gameTab[_gameLibIdx]->simulateGame(event);
+
     this->_graphicalTab[_graphicLibIdx]->drawEntities(
         this->_gameTab[_gameLibIdx]->getEntities());
     /*-- TMP --*/
