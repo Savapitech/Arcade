@@ -1,5 +1,4 @@
 #include <iostream>
-#include <memory>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -143,7 +142,6 @@ SFML::~SFML() {
 
   if (this->_window.isOpen())
     this->_window.close();
-  std::cerr << "Dtor SFML lib\n";
 }
 
 extern "C" graphic::IGraphic *graphicEntryPoint() { return new SFML(); }

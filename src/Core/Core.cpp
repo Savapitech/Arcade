@@ -1,14 +1,10 @@
 #include <filesystem>
-#include <iostream>
-#include <memory>
-#include <vector>
 
 #include "Core.hpp"
 #include "Game/Entity.hpp"
-#include "Graphic.hpp"
-#include "Loader.hpp"
+#include "Graphic/Graphic.hpp"
 
-#include "Logger.hpp"
+#include "Logger/Logger.hpp"
 
 #include "Utils.hpp"
 

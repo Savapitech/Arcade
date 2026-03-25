@@ -16,7 +16,7 @@ CXXFLAGS += -Wp,-U_FORTIFY_SOURCE -Wcast-qual
 CXXFLAGS += -Wformat=2 -Wshadow -fno-builtin -Wno-unused-command-line-argument 
 CXXFLAGS += -Wstrict-aliasing=0 -Wunreachable-code
 CXXFLAGS += -Wwrite-strings -Werror=format-nonliteral -Werror=return-type
-CXXFLAGS += -std=c++20 -iquote src/Core -iquote src/Game -iquote src/Graphic -iquote src/Logger
+CXXFLAGS += -std=c++20 -iquote src
 
 SFML_LDFLAGS += $(shell pkg-config --cflags --libs sfml-graphics sfml-window sfml-system)
 NCURSES_LDFLAGS += $(shell pkg-config --cflags --libs ncurses)
@@ -37,7 +37,7 @@ OBJ_$(strip $1) := $$($(strip $2):%.cpp=$$(BUILD_DIR)/$(strip $1)/%.o)
 $$(BUILD_DIR)/$(strip $1)/%.o: %.cpp
 	@ mkdir -p $$(dir $$@)
 	@ mkdir -p lib
-	 $$(COMPILE.cpp) $$(CXXFLAGS) $(strip $3) $$< -o $$@
+	@ $$(COMPILE.cpp) $$(CXXFLAGS) $(strip $3) $$< -o $$@
 	@ $$(LOG_TIME) "$$(C_GREEN) CC $$(C_PURPLE) $$(notdir $$@) $$(C_RESET)"
 
 $$(NAME_$(strip $1)): $$(OBJ_$(strip $1))

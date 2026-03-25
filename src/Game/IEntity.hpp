@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Core/Utils.hpp"
 #include <string>
+
+#include "Core/Utils.hpp"
 
 namespace game {
 
