@@ -1,6 +1,6 @@
 
 
-#include "Pacman.hpp"
+#include "PacmanGameLib.hpp"
 
 void PacmanGame::initGame() {
   game::Entity arena_entity(
@@ -44,9 +44,13 @@ void PacmanGame::initGame() {
   game::Entity redGhost_entity("pacman", "assets/Game/Pacman/RedGhost.png",
                                "\e[0;31m|A", core::Vec2(350, 190),
                                core::Vec2(350, 190));
-
-  std::vector<game::Entity> entities;
-  entities.push_back(arena_entity);
-  entities.push_back(pacman_entity);
-  entities.push_back(redGhost_entity);
+  game::Entity blueGhost_entity("pacman", "assets/Game/Pacman/BlueGhost.png",
+                                "\e[0;36m|A", core::Vec2(330, 190),
+                                core::Vec2(330, 190));
+  game::Entity orangeGhost_entity(
+      "pacman", "assets/Game/Pacman/OrangeGhost.png", "\e[0;33m|A",
+      core::Vec2(350, 170), core::Vec2(350, 170));
+  game::Entity pinkGhost_entity("pacman", "assets/Game/Pacman/PinkGhost.png",
+                                "\e[0;35m|A", core::Vec2(330, 170),
+                                core::Vec2(330, 170));
 }

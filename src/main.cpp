@@ -1,8 +1,8 @@
 #include <iostream>
 #include <ostream>
 
-#include "Core.hpp"
-#include "Logger.hpp"
+#include "Core/Core.hpp"
+#include "Logger/Logger.hpp"
 
 #define SUCCESS 0;
 #define FAILURE 84;

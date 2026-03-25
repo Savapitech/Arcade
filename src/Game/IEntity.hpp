@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/Utils.hpp"
+#include "Core/Utils.hpp"
 #include <string>
 
 namespace game {

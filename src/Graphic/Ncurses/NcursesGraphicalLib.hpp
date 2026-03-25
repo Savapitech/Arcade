@@ -3,8 +3,8 @@
 #include <ncurses.h>
 #include <string>
 
-#include "../../Core/Utils.hpp"
-#include "../Graphic.hpp"
+#include "Core/Utils.hpp"
+#include "Graphic/Graphic.hpp"
 
 class NcursesData {
 private:

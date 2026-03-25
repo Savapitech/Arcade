@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "../Game/Game.hpp"
-#include "../Graphic/Graphic.hpp"
-#include "Entity.hpp"
+#include "Game/Entity.hpp"
+#include "Graphic/Graphic.hpp"
 #include "Loader.hpp"
 
 namespace core {

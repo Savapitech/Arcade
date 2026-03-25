@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
-#include "../Game/Entity.hpp"
 #include "Core.hpp"
+#include "Game/Entity.hpp"
 #include "Graphic.hpp"
 #include "Loader.hpp"
 

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Utils.hpp"
+#include "Core/Utils.hpp"
 
 namespace game {
 class Text {

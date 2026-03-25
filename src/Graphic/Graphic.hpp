@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "../Core/Event.hpp"
-#include "../Game/Entity.hpp"
+#include "Core/Event.hpp"
+#include "Game/Entity.hpp"
 
 namespace graphic {
 class IGraphic {

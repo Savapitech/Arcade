@@ -1,4 +1,3 @@
-#include <cstddef>
 #include <string>
 
 #include "Entity.hpp"

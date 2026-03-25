@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-#include "../Graphic.hpp"
+#include "Graphic/Graphic.hpp"
 #include "SFMLGraphicalLib.hpp"
 
 void SFML::openWindow(size_t heigth, size_t width,

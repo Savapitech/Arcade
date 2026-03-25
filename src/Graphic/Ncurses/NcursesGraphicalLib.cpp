@@ -1,11 +1,8 @@
-#include <iostream>
 #include <map>
 #include <ncurses.h>
-#include <ostream>
-#include <sstream>
 #include <string>
 
-#include "../../Core/Utils.hpp"
+#include "Core/Utils.hpp"
 #include "NcursesGraphicalLib.hpp"
 
 void custom_print(core::Vec2 pos, std::string asciiTexture) {

@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "../Graphic.hpp"
+#include "Graphic/Graphic.hpp"
 
 class SFML : public graphic::IGraphic {
 private:
