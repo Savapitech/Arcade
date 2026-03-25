@@ -4,6 +4,7 @@
 
 #include "Entity.hpp"
 #include "Text.hpp"
+#include "Core/Event.hpp"
 
 namespace game {
 
@@ -11,6 +12,7 @@ class IGame {
 public:
   virtual const std::vector<Entity> &getEntities() const = 0;
   virtual void initGame() = 0;
+  virtual void simulateGame(Event &ev) = 0;
   virtual void stopGame() = 0;
   virtual ~IGame() = default;
 };
