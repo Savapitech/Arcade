@@ -7,6 +7,7 @@ SRC += $(wildcard src/*/*.cpp)
 
 SRC_SFML := $(wildcard src/Graphic/SFML/*.cpp)
 SRC_NCURSES := $(wildcard src/Graphic/Ncurses/*.cpp)
+SRC_SDL2 := $(wildcard src/Graphic/SDL2/*.cpp)
 
 SRC_PACMAN := $(wildcard src/Game/Pacman/*.cpp)
 SRC_PACMAN += src/Game/Entity.cpp
@@ -23,6 +24,7 @@ CXXFLAGS += -std=c++20 -iquote src
 
 SFML_LDFLAGS += $(shell pkg-config --cflags --libs sfml-graphics sfml-window sfml-system)
 NCURSES_LDFLAGS += $(shell pkg-config --cflags --libs ncurses)
+SDL2_LDFLAGS += $(shell pkg-config --cflags --libs sdl2 SDL2_image)
 
 include utils.mk
 
@@ -53,6 +55,7 @@ endef
 $(eval $(call mk-profile, core, SRC, , $(BIN_NAME)))
 $(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared -fPIC, lib/arcade_sfml.so))
 $(eval $(call mk-profile, ncurses, SRC_NCURSES, $(NCURSES_LDFLAGS) -shared -fPIC, lib/arcade_ncurses.so))
+$(eval $(call mk-profile, sdl2, SRC_SDL2, $(SDL2_LDFLAGS) -shared -fPIC, lib/arcade_sdl2.so))
 $(eval $(call mk-profile, pacman, SRC_PACMAN, -shared -fPIC, lib/arcade_pacman.so))
 $(eval $(call mk-profile, debug, SRC, -D DEBUG_MODE -lasan -fanalyzer -g3, debug))
 $(eval $(call mk-profile, test, SRC, , test))
@@ -61,7 +64,7 @@ core: $(NAME_core)
 
 games: $(NAME_pacman)
 
-graphicals: $(NAME_sfml) $(NAME_ncurses)
+graphicals: $(NAME_sfml) $(NAME_ncurses) $(NAME_sdl2)
 
 all: core graphicals games
 
