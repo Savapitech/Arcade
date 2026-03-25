@@ -20,9 +20,10 @@ core::Core::Core(const std::string &graphicPath)
     if (entry.path().extension() != ".so")
       throw std::runtime_error("Failed while loading lib");
 
-    if (entry.path().string() == graphicPath){
+    if (entry.path().string() == graphicPath) {
       LOG_DEBUG("Graphic Lib:" + std::to_string(libIdx));
-      LOG_DEBUG("First Lib:[" + entry.path().string() + " == " + graphicPath + "]");
+      LOG_DEBUG("First Lib:[" + entry.path().string() + " == " + graphicPath +
+                "]");
       this->_graphicLibIdx = libIdx;
     }
 
@@ -38,12 +39,14 @@ core::Core::Core(const std::string &graphicPath)
       libIdx++;
       continue;
     } catch (const std::exception &e) {
-    try {
-      this->_gameLoader.push_back(std::make_unique<DLLoader<game::IGame>>(entry.path().string()));
-      this->_gameTab.push_back(_gameLoader.back()->getInstance("gameEntryPoint"));
-      LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
-    } catch (const std::exception &e) {
-      throw std::runtime_error("Failed while loading lib");
+      try {
+        this->_gameLoader.push_back(
+            std::make_unique<DLLoader<game::IGame>>(entry.path().string()));
+        this->_gameTab.push_back(
+            _gameLoader.back()->getInstance("gameEntryPoint"));
+        LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
+      } catch (const std::exception &e) {
+        throw std::runtime_error("Failed while loading lib");
       }
     }
   }

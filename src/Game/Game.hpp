@@ -2,9 +2,9 @@
 
 #include <vector>
 
+#include "Core/Event.hpp"
 #include "Entity.hpp"
 #include "Text.hpp"
-#include "Core/Event.hpp"
 
 namespace game {
 

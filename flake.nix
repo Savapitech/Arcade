@@ -29,6 +29,8 @@
             sfml
             ncurses
             pkg-config
+            SDL2
+            SDL2_image
           ] else [
             libcxx
           ]) ++ [
