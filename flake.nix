@@ -36,6 +36,7 @@
           ]) ++ [
             criterion
             clang
+            clang-tools
           ];
       };
     });
