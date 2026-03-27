@@ -1,13 +1,13 @@
+#include "NcursesGraphicalLib.hpp"
+#include "Core/Utils.hpp"
+#include <iostream>
 #include <map>
 #include <ncurses.h>
 #include <string>
 
-#include "Core/Utils.hpp"
-#include "NcursesGraphicalLib.hpp"
-
 void custom_print(core::Vec2 pos, std::string asciiTexture) {
-  int y = static_cast<int>(pos.y) / 16;
-  int x = static_cast<int>(pos.x) / 8;
+  int y = static_cast<int>(pos.y) / CHAR_Y_SIZE;
+  int x = static_cast<int>(pos.x) / CHAR_X_SIZE;
   size_t sep = 0;
 
   while ((sep = asciiTexture.find("|")) != std::string::npos) {
@@ -37,7 +37,7 @@ void myPrintw(core::Vec2 pos, std::string asciiTexture) {
     if (linebreak != std::string::npos)
       custom_print(pos, asciiTexture);
     else
-      mvprintw((int)pos.y / 16, (int)pos.x / 8, "%s", asciiTexture.c_str());
+      mvprintw(((int)pos.y / CHAR_Y_SIZE), ((int)pos.x / CHAR_X_SIZE), "%s", asciiTexture.c_str());
     attroff(COLOR_PAIR(it->second));
   }
 }
@@ -87,6 +87,12 @@ void Ncurses::destroyGraphic() { this->_dataTab.clear(); }
 
 void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
   erase();
+  this->_dataTab.clear();
+  for (auto &entity : entities) {
+    this->_dataTab.push_back(NcursesData(entity.getAsciitexture(),
+                                         entity.getPos(), entity.getHitbox()));
+  }
+
   for (NcursesData &data : this->_dataTab) {
     myPrintw(data.getPos(), data.getAsciiTexture());
   }

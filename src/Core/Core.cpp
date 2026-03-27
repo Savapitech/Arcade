@@ -83,6 +83,7 @@ void core::Core::run() {
   while (this->_graphicalTab[_graphicLibIdx]->isOpen()) {
     event.clear();
     this->_graphicalTab[_graphicLibIdx]->fillEvent(event);
+    this->_gameTab[_gameLibIdx]->simulateGame(event);
     this->_graphicalTab[_graphicLibIdx]->drawEntities(
         this->_gameTab[_gameLibIdx]->getEntities());
     /*-- TMP --*/

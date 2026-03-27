@@ -42,6 +42,18 @@ void SFML::destroyGraphic() {
 }
 
 void SFML::drawEntities(const std::vector<game::Entity> &entities) {
+  this->_spriteTab.clear();
+  this->_textureTab.clear();
+
+  this->_textureTab.reserve(entities.size());
+  this->_spriteTab.reserve(entities.size());
+
+  for (auto &entity : entities) {
+    this->_textureTab.push_back(sf::Texture(entity.getPath()));
+    this->_spriteTab.push_back(sf::Sprite(this->_textureTab.back()));
+    this->_spriteTab.back().setPosition(
+        {(float)entity.getPos().x, (float)entity.getPos().y});
+  }
   this->_window.clear();
   for (sf::Sprite &sprite : this->_spriteTab)
     this->_window.draw(sprite);
