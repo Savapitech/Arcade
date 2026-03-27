@@ -1,6 +1,6 @@
 #include "NcursesGraphicalLib.hpp"
 #include "Core/Utils.hpp"
-#include <iostream>
+
 #include <map>
 #include <ncurses.h>
 #include <string>
@@ -128,7 +128,8 @@ void Ncurses::fillEvent(Event &event) {
 
   auto it = mapKey.find(ch);
   if (it != mapKey.end())
-    event.addKey(it->second);
+    for (int i = 0; i < 16; i++)
+      event.addKey(it->second);
 
   if (ch == 27)
     closeWindow();
