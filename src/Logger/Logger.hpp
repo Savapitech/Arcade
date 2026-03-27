@@ -8,12 +8,16 @@
 
 #include "Sequences.hpp"
 
-enum level_t : uint8_t { L_DEBUG, L_LOG, L_WARN, L_ERROR, L_FATAL };
+enum level_t : uint8_t { L_DEBUG, L_INFO, L_WARN, L_ERROR, L_FATAL };
 
 namespace Logger {
 
 inline level_t &minLevel() {
+#ifdef DEBUG_MODE
   static level_t level = L_DEBUG;
+#else
+  static level_t level = L_INFO;
+#endif
   return level;
 }
 
@@ -35,8 +39,8 @@ inline const char *levelTag(level_t level) {
   switch (level) {
   case L_DEBUG:
     return PURPLE "DBG" RESET;
-  case L_LOG:
-    return BLUE "LOG" RESET;
+  case L_INFO:
+    return BLUE "INF" RESET;
   case L_WARN:
     return YELLOW "WRN" RESET;
   case L_ERROR:
@@ -68,7 +72,7 @@ inline void print(level_t level, const char *file, int line,
 } // namespace Logger
 
 #define LOG_DEBUG(msg) Logger::print(L_DEBUG, __FILE__, __LINE__, msg)
-#define LOG_INFO(msg) Logger::print(L_LOG, __FILE__, __LINE__, msg)
+#define LOG_INFO(msg) Logger::print(L_INFO, __FILE__, __LINE__, msg)
 #define LOG_WARN(msg) Logger::print(L_WARN, __FILE__, __LINE__, msg)
 #define LOG_ERROR(msg) Logger::print(L_ERROR, __FILE__, __LINE__, msg)
 #define LOG_FATAL(msg) Logger::print(L_FATAL, __FILE__, __LINE__, msg)

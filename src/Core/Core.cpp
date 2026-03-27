@@ -22,7 +22,6 @@ core::Core::Core(const std::string &graphicPath)
       throw std::runtime_error("Failed while loading lib");
 
     if (entry.path().string().find(graphicPath) != std::string::npos) {
-      LOG_DEBUG("Graphic Lib:" + std::to_string(libIdx));
       LOG_DEBUG("First Lib:[" + entry.path().string() + " == " + graphicPath +
                 "]");
       this->_graphicLibIdx = libIdx;
@@ -76,7 +75,7 @@ void core::Core::switchGraphicalLib(Event &ev,
 void core::Core::run() {
   Event event;
 
-  LOG_DEBUG("Graphic:" + std::to_string(_graphicLibIdx));
+  LOG_DEBUG("Graphic idx [" + std::to_string(_graphicLibIdx) + "]");
   this->_graphicalTab[_graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
   this->_gameTab[_gameLibIdx]->initGame();
   this->_graphicalTab[_graphicLibIdx]->initGraphic(

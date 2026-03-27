@@ -57,8 +57,6 @@ $(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared -fPIC, lib/arc
 $(eval $(call mk-profile, ncurses, SRC_NCURSES, $(NCURSES_LDFLAGS) -shared -fPIC, lib/arcade_ncurses.so))
 $(eval $(call mk-profile, sdl2, SRC_SDL2, $(SDL2_LDFLAGS) -shared -fPIC, lib/arcade_sdl2.so))
 $(eval $(call mk-profile, pacman, SRC_PACMAN, -shared -fPIC, lib/arcade_pacman.so))
-$(eval $(call mk-profile, debug, SRC, -D DEBUG_MODE -lasan -fanalyzer -g3, debug))
-$(eval $(call mk-profile, test, SRC, , test))
 
 core: $(NAME_core)
 
@@ -67,6 +65,9 @@ games: $(NAME_pacman)
 graphicals: $(NAME_sfml) $(NAME_ncurses) $(NAME_sdl2)
 
 all: core graphicals games
+
+debug: CXXFLAGS += -D DEBUG_MODE
+debug: all
 
 tests: $(NAME_test)
 	@ bash tests/run_all.sh
