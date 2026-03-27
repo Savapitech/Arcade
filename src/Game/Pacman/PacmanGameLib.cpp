@@ -72,16 +72,16 @@ static void movePacman(Event &e, game::Entity &pacman) {
 
     switch (keys.top()) {
     case core::Keys::Z:
-      newPos.y -= 1;
+      newPos.y -= 8;
       break;
     case core::Keys::Q:
-      newPos.x -= 1;
+      newPos.x -= 8;
       break;
     case core::Keys::S:
-      newPos.y += 1;
+      newPos.y += 8;
       break;
     case core::Keys::D:
-      newPos.x += 1;
+      newPos.x += 8;
       break;
     default:
       break;
@@ -98,13 +98,13 @@ static void moveGhosts(std::vector<game::Entity> &entities) {
     if (i >= 2) {
       core::Vec2 newPos = entity.getPos();
       if (newPos.x > pacmanPos.x)
-        newPos.x -= 0.5;
+        newPos.x -= 4;
       else
-        newPos.x += 0.5;
+        newPos.x += 4;
       if (newPos.y > pacmanPos.y)
-        newPos.y -= 0.5;
+        newPos.y -= 4;
       else
-        newPos.y += 0.5;
+        newPos.y += 4;
       entity.setPos(newPos);
     }
     i++;

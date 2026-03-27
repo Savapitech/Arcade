@@ -1,6 +1,6 @@
+#include <chrono>
 #include <filesystem>
 #include <memory>
-#include <chrono>
 
 #include "Core.hpp"
 #include "Game/Entity.hpp"
@@ -84,7 +84,8 @@ void core::Core::run() {
 
   auto lastTime = std::chrono::steady_clock::now();
   auto timeSinceLastUpdate = std::chrono::duration<double, std::milli>::zero();
-  const auto timePerTick = std::chrono::duration<double, std::milli>(TIME_PER_TICK);
+  const auto timePerTick =
+      std::chrono::duration<double, std::milli>(TIME_PER_TICK);
 
   while (this->_graphicalTab[_graphicLibIdx]->isOpen()) {
     auto currentTime = std::chrono::steady_clock::now();
@@ -100,7 +101,8 @@ void core::Core::run() {
       this->_gameTab[_gameLibIdx]->simulateGame(event);
 
       /*-- TMP --*/
-      this->switchGraphicalLib(event, this->_gameTab[_gameLibIdx]->getEntities());
+      this->switchGraphicalLib(event,
+                               this->_gameTab[_gameLibIdx]->getEntities());
       /*-- TMP --*/
     }
 

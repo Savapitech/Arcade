@@ -128,8 +128,7 @@ void Ncurses::fillEvent(Event &event) {
 
   auto it = mapKey.find(ch);
   if (it != mapKey.end())
-    for (int i = 0; i < 16; i++)
-      event.addKey(it->second);
+    event.addKey(it->second);
 
   if (ch == 27)
     closeWindow();
