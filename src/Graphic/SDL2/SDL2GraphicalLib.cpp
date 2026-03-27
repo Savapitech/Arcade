@@ -109,14 +109,17 @@ void SDL2::destroyGraphic() {
 }
 
 void SDL2::drawEntities(const std::vector<game::Entity> &entities) {
-  (void)entities;
   SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, 255);
   SDL_RenderClear(this->_renderer);
 
-  for (size_t i = 0; i < this->_textureTab.size() && i < this->_rectTab.size();
-       i++)
+  for (size_t i = 0; i < this->_textureTab.size() &&
+                     i < this->_rectTab.size() && i < entities.size();
+       i++) {
+    this->_rectTab[i].x = static_cast<int>(entities[i].getPos().x);
+    this->_rectTab[i].y = static_cast<int>(entities[i].getPos().y);
     SDL_RenderCopy(this->_renderer, this->_textureTab[i], nullptr,
                    &this->_rectTab[i]);
+  }
 
   SDL_RenderPresent(this->_renderer);
 }
@@ -131,12 +134,22 @@ void SDL2::fillEvent(Event &event) {
       _isOpened = false;
       return;
     }
-
-    if (sdlEvent.type == SDL_KEYDOWN) {
-      SDL_Keycode keycode = sdlEvent.key.keysym.sym;
-      event.addKey(this->convertSDLKey(keycode));
-    }
   }
+
+  const Uint8 *state = SDL_GetKeyboardState(NULL);
+
+  for (SDL_Keycode i = SDLK_a; i <= SDLK_z; ++i) {
+    if (state[SDL_GetScancodeFromKey(i)])
+      event.addKey(this->convertSDLKey(i));
+  }
+  for (SDL_Keycode i = SDLK_0; i <= SDLK_9; ++i) {
+    if (state[SDL_GetScancodeFromKey(i)])
+      event.addKey(this->convertSDLKey(i));
+  }
+  if (state[SDL_SCANCODE_SPACE])
+    event.addKey(core::Keys::Space);
+  if (state[SDL_SCANCODE_RETURN] || state[SDL_SCANCODE_KP_ENTER])
+    event.addKey(core::Keys::Enter);
 }
 
 SDL2::~SDL2() { this->closeWindow(); }
