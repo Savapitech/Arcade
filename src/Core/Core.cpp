@@ -84,12 +84,17 @@ void core::Core::run() {
 
   auto lastTime = std::chrono::steady_clock::now();
   auto timeSinceLastUpdate = std::chrono::duration<double, std::milli>::zero();
+  auto timeSinceLastUpdateGraphic =
+      std::chrono::duration<double, std::milli>::zero();
   const auto timePerTick =
       std::chrono::duration<double, std::milli>(TIME_PER_TICK);
+  const auto timePerTickGraphic =
+      std::chrono::duration<double, std::milli>(TIME_PER_TICK_GRAPHIC);
 
   while (this->_graphicalTab[_graphicLibIdx]->isOpen()) {
     auto currentTime = std::chrono::steady_clock::now();
     timeSinceLastUpdate += currentTime - lastTime;
+    timeSinceLastUpdateGraphic += currentTime - lastTime;
     lastTime = currentTime;
 
     while (timeSinceLastUpdate >= timePerTick) {
@@ -106,8 +111,11 @@ void core::Core::run() {
       /*-- TMP --*/
     }
 
-    this->_graphicalTab[_graphicLibIdx]->drawEntities(
-        this->_gameTab[_gameLibIdx]->getEntities());
+    while (timeSinceLastUpdateGraphic >= timePerTickGraphic) {
+      timeSinceLastUpdateGraphic -= timePerTickGraphic;
+      this->_graphicalTab[_graphicLibIdx]->drawEntities(
+          this->_gameTab[_gameLibIdx]->getEntities());
+    }
   }
   this->_graphicalTab[_graphicLibIdx]->destroyGraphic();
   this->_graphicalTab[_graphicLibIdx]->closeWindow();

@@ -9,6 +9,7 @@
 #include "Loader.hpp"
 
 #define TIME_PER_TICK 50.0
+#define TIME_PER_TICK_GRAPHIC 16.67
 
 namespace core {
 class Core {
