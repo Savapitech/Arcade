@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <memory>
+#include <chrono>
 
 #include "Core.hpp"
 #include "Game/Entity.hpp"
@@ -81,17 +82,30 @@ void core::Core::run() {
   this->_graphicalTab[_graphicLibIdx]->initGraphic(
       this->_gameTab[_gameLibIdx]->getEntities());
 
-  while (this->_graphicalTab[_graphicLibIdx]->isOpen()) {
-    event.clear();
-    this->_graphicalTab[_graphicLibIdx]->fillEvent(event);
+  auto lastTime = std::chrono::steady_clock::now();
+  auto timeSinceLastUpdate = std::chrono::duration<double, std::milli>::zero();
+  const auto timePerTick = std::chrono::duration<double, std::milli>(TIME_PER_TICK);
 
-    this->_gameTab[_gameLibIdx]->simulateGame(event);
+  while (this->_graphicalTab[_graphicLibIdx]->isOpen()) {
+    auto currentTime = std::chrono::steady_clock::now();
+    timeSinceLastUpdate += currentTime - lastTime;
+    lastTime = currentTime;
+
+    while (timeSinceLastUpdate >= timePerTick) {
+      timeSinceLastUpdate -= timePerTick;
+
+      event.clear();
+      this->_graphicalTab[_graphicLibIdx]->fillEvent(event);
+
+      this->_gameTab[_gameLibIdx]->simulateGame(event);
+
+      /*-- TMP --*/
+      this->switchGraphicalLib(event, this->_gameTab[_gameLibIdx]->getEntities());
+      /*-- TMP --*/
+    }
 
     this->_graphicalTab[_graphicLibIdx]->drawEntities(
         this->_gameTab[_gameLibIdx]->getEntities());
-    /*-- TMP --*/
-    this->switchGraphicalLib(event, this->_gameTab[_gameLibIdx]->getEntities());
-    /*-- TMP --*/
   }
   this->_graphicalTab[_graphicLibIdx]->destroyGraphic();
   this->_graphicalTab[_graphicLibIdx]->closeWindow();

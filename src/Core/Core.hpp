@@ -8,6 +8,8 @@
 #include "Graphic/Graphic.hpp"
 #include "Loader.hpp"
 
+#define TIME_PER_TICK 50.0
+
 namespace core {
 class Core {
 public:
