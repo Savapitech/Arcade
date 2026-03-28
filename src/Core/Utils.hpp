@@ -13,6 +13,17 @@ public:
   Vec2(float x_ = 0.f, float y_ = 0.f) : x(x_), y(y_) {}
 };
 
+class Rect {
+public:
+  float x;
+  float y;
+  float width;
+  float height;
+
+  Rect(float x_ = 0.f, float y_ = 0.f, float w_ = 0.f, float h_ = 0.f)
+      : x(x_), y(y_), width(w_), height(h_) {}
+};
+
 } // namespace core
 
 namespace utils {

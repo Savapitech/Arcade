@@ -20,6 +20,9 @@ public:
   virtual void setPos(core::Vec2 pos) = 0;
   virtual bool isHidden() = 0;
   virtual void setHidden(bool hidden) = 0;
+  virtual core::Rect getSrcRect() const = 0;
+  virtual void setSrcRect(core::Rect rect) = 0;
+  virtual void setAsciitexture(const std::string &ascii) = 0;
   virtual ~IEntity() = default;
 };
 } // namespace game

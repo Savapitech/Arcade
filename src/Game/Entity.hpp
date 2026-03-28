@@ -8,12 +8,13 @@ class Entity : public IEntity {
 private:
   const std::string _name;
   const std::string _texturePath;
-  const std::string _asciiTexture;
+  std::string _asciiTexture;
   const core::Vec2 _startPos;
   const core::Vec2 _hitBoxSize;
 
   core::Vec2 _pos;
   bool _hidden;
+  core::Rect _srcRect;
 
 public:
   Entity(const std::string name, const std::string path,
@@ -33,5 +34,10 @@ public:
   void setPos(core::Vec2 pos) override { _pos = pos; }
   bool isHidden() override { return _hidden; }
   void setHidden(bool hidden) override { _hidden = hidden; }
+  core::Rect getSrcRect() const override { return _srcRect; }
+  void setSrcRect(core::Rect rect) override { _srcRect = rect; }
+  void setAsciitexture(const std::string &ascii) override {
+    _asciiTexture = ascii;
+  }
 };
 } // namespace game
