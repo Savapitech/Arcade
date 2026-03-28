@@ -117,7 +117,19 @@ void SDL2::drawEntities(const std::vector<game::Entity> &entities) {
        i++) {
     this->_rectTab[i].x = static_cast<int>(entities[i].getPos().x);
     this->_rectTab[i].y = static_cast<int>(entities[i].getPos().y);
-    SDL_RenderCopy(this->_renderer, this->_textureTab[i], nullptr,
+
+    core::Rect src = entities[i].getSrcRect();
+    SDL_Rect *srcPtr = nullptr;
+    SDL_Rect srcRectSDL;
+    if (src.width > 0 && src.height > 0) {
+      srcRectSDL = {static_cast<int>(src.x), static_cast<int>(src.y),
+                    static_cast<int>(src.width), static_cast<int>(src.height)};
+      srcPtr = &srcRectSDL;
+      this->_rectTab[i].w = static_cast<int>(src.width);
+      this->_rectTab[i].h = static_cast<int>(src.height);
+    }
+
+    SDL_RenderCopy(this->_renderer, this->_textureTab[i], srcPtr,
                    &this->_rectTab[i]);
   }
 
