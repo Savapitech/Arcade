@@ -51,6 +51,13 @@ void SFML::drawEntities(const std::vector<game::Entity> &entities) {
     this->_spriteTab.push_back(sf::Sprite(this->_textureTab.back()));
     this->_spriteTab.back().setPosition(
         {(float)entity.getPos().x, (float)entity.getPos().y});
+
+    core::Rect src = entity.getSrcRect();
+    if (src.width > 0 && src.height > 0) {
+      this->_spriteTab.back().setTextureRect(sf::IntRect(
+          {static_cast<int>(src.x), static_cast<int>(src.y)},
+          {static_cast<int>(src.width), static_cast<int>(src.height)}));
+    }
   }
   this->_window.clear();
   for (sf::Sprite &sprite : this->_spriteTab)
