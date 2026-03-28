@@ -88,7 +88,7 @@ bool PacmanGame::isColliding(core::Vec2 pos) const {
   float offsetY = 70;
   float blockSize = 8;
 
-  core::Vec2 logicalPos = {pos.x + 2, pos.y + 2};
+  core::Vec2 logicalPos = {pos.x + 2.75f, pos.y + 4};
 
   int left = (logicalPos.x - offsetX + 2) / blockSize;
   int right = (logicalPos.x - offsetX + 5) / blockSize;
