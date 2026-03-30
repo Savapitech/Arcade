@@ -4,6 +4,7 @@
 #include "Core/Utils.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Game.hpp"
+#include "Logger/Logger.hpp"
 
 void PacmanGame::initGame() {
   _map = {"############################", "#            ##            #",
@@ -81,6 +82,36 @@ void PacmanGame::initGame() {
   _entities.push_back(blueGhost_entity);
   _entities.push_back(orangeGhost_entity);
   _entities.push_back(pinkGhost_entity);
+
+  _ghosts.push_back({2, core::Keys::Z});
+  _ghosts.push_back({3, core::Keys::D});
+  _ghosts.push_back({4, core::Keys::Q});
+  _ghosts.push_back({5, core::Keys::Z});
+
+  _score = 0;
+  _dotsCount = 0;
+  _gameOver = false;
+
+  for (int y = 0; y < 31; ++y) {
+    for (int x = 0; x < 28; ++x) {
+      if (_map[y][x] == ' ') {
+        bool isGhostHouse = (y >= 12 && y <= 16 && x >= 10 && x <= 17);
+        bool isOutsideBlocks = (y >= 10 && y <= 19 && (x < 6 || x > 21));
+
+        if (x > 0 && x < 27 && !isGhostHouse && !isOutsideBlocks && y != 14) {
+          _map[y][x] = '.';
+          _dotsCount++;
+          game::Entity dot(std::string("dot_") + std::to_string(y) + "_" +
+                               std::to_string(x),
+                           "assets/Game/Pacman/Pacman.png", "\e[0;33m|.",
+                           core::Vec2(240 + x * 8 - 4, 76 + y * 8 - 4),
+                           core::Vec2(240 + x * 8 - 4, 76 + y * 8 - 4));
+          dot.setSrcRect(core::Rect(6, 6, 4, 4));
+          _entities.push_back(dot);
+        }
+      }
+    }
+  }
 }
 
 bool PacmanGame::isColliding(core::Vec2 pos) const {
@@ -95,8 +126,11 @@ bool PacmanGame::isColliding(core::Vec2 pos) const {
   int top = (logicalPos.y - offsetY + 2) / blockSize;
   int bottom = (logicalPos.y - offsetY + 5) / blockSize;
 
-  if (left < 0 || right >= 28 || top < 0 || bottom >= 31)
+  if (left < 0 || right >= 28 || top < 0 || bottom >= 31) {
+    if (top >= 13 && bottom <= 15)
+      return false;
     return true;
+  }
 
   if (_map[top][left] == '#' || _map[top][right] == '#' ||
       _map[bottom][left] == '#' || _map[bottom][right] == '#')
@@ -138,7 +172,15 @@ void PacmanGame::movePacman(Event &e) {
 
   core::Vec2 currentPos = _entities[1].getPos();
 
-  if (_nextDir) {
+  if (currentPos.x < 230.0f - 12.0f) {
+    _entities[1].setPos({230.0f + 27.0f * 8.0f, currentPos.y});
+    return;
+  } else if (currentPos.x > 230.0f + 27.0f * 8.0f) {
+    _entities[1].setPos({230.0f - 8.0f, currentPos.y});
+    return;
+  }
+
+  if (_nextDir != core::Keys::Space) {
     core::Vec2 nextPosAttempt = getNextPos(currentPos, _nextDir);
     if (!isColliding(nextPosAttempt)) {
       _currentDir = _nextDir;
@@ -171,11 +213,150 @@ void PacmanGame::movePacman(Event &e) {
   }
 }
 
-static void moveGhosts(std::vector<game::Entity> &entities) {}
+void PacmanGame::resetPositions() {
+  _entities[1].setPos({330, 202});
+  _nextDir = core::Keys::Space;
+  _currentDir = core::Keys::Space;
+
+  _entities[2].setPos({346, 178}); // Red Ghost
+  _entities[3].setPos({330, 186}); // Blue Ghost
+  _entities[4].setPos({346, 186}); // Orange Ghost
+  _entities[5].setPos({330, 178}); // Pink Ghost
+
+  _ghosts[0].currentDir = core::Keys::Z;
+  _ghosts[1].currentDir = core::Keys::D;
+  _ghosts[2].currentDir = core::Keys::Q;
+  _ghosts[3].currentDir = core::Keys::Z;
+}
+
+void PacmanGame::moveGhosts() {
+  core::Vec2 pacmanPos = _entities[1].getPos();
+  core::Vec2 pacLogical = {pacmanPos.x + 2.75f, pacmanPos.y + 4};
+  int pacX = (pacLogical.x - 230 + 2) / 8;
+  int pacY = (pacLogical.y - 70 + 2) / 8;
+
+  for (auto &ghost : _ghosts) {
+    core::Vec2 ghostPos = _entities[ghost.entityIdx].getPos();
+    core::Vec2 gLogical = {ghostPos.x + 2.75f, ghostPos.y + 4};
+
+    if (ghostPos.x < 230.0f - 12.0f) {
+      _entities[ghost.entityIdx].setPos({230.0f + 27.0f * 8.0f, ghostPos.y});
+      continue;
+    } else if (ghostPos.x > 230.0f + 27.0f * 8.0f) {
+      _entities[ghost.entityIdx].setPos({230.0f - 8.0f, ghostPos.y});
+      continue;
+    }
+
+    if (std::abs(pacLogical.x - gLogical.x) < 6 &&
+        std::abs(pacLogical.y - gLogical.y) < 6) {
+      _gameOver = true;
+      LOG_INFO("GMAME OVER PacMan");
+      resetPositions();
+      return;
+    }
+
+    bool isAligned =
+        (((int)gLogical.x - 230) % 8 == 0 && ((int)gLogical.y - 70) % 8 == 0);
+
+    if (!isAligned) {
+      int dx = std::abs((int)gLogical.x - 230) % 8;
+      int dy = std::abs((int)gLogical.y - 70) % 8;
+      isAligned = (dx <= 1 && dy <= 1);
+    }
+
+    if (isAligned) {
+      int gx = (gLogical.x - 230) / 8;
+      int gy = (gLogical.y - 70) / 8;
+
+      std::vector<core::Keys> validDirs;
+      std::vector<core::Vec2> nextCells;
+
+      auto checkDir = [&](core::Keys dir, int nx, int ny, core::Keys opp) {
+        if (nx >= 0 && nx < 28 && ny >= 0 && ny < 31) {
+          if (ghost.currentDir != opp && _map[ny][nx] != '#') {
+            validDirs.push_back(dir);
+            nextCells.push_back({(float)nx, (float)ny});
+          }
+        }
+      };
+
+      checkDir(core::Keys::Z, gx, gy - 1, core::Keys::S);
+      checkDir(core::Keys::S, gx, gy + 1, core::Keys::Z);
+      checkDir(core::Keys::Q, gx - 1, gy, core::Keys::D);
+      checkDir(core::Keys::D, gx + 1, gy, core::Keys::Q);
+
+      if (validDirs.empty()) {
+        if (ghost.currentDir == core::Keys::Z)
+          ghost.currentDir = core::Keys::S;
+        else if (ghost.currentDir == core::Keys::S)
+          ghost.currentDir = core::Keys::Z;
+        else if (ghost.currentDir == core::Keys::Q)
+          ghost.currentDir = core::Keys::D;
+        else if (ghost.currentDir == core::Keys::D)
+          ghost.currentDir = core::Keys::Q;
+      } else {
+        float minDist = 9999999.0f;
+        core::Keys bestDir = validDirs[0];
+
+        for (size_t k = 0; k < validDirs.size(); ++k) {
+          float dx = nextCells[k].x - pacX;
+          float dy = nextCells[k].y - pacY;
+          float dist = dx * dx + dy * dy;
+
+          dist += (rand() % 10);
+          if (dist < minDist) {
+            minDist = dist;
+            bestDir = validDirs[k];
+          }
+        }
+        ghost.currentDir = bestDir;
+      }
+    }
+
+    float speed = 2;
+    if (ghost.currentDir == core::Keys::Z)
+      ghostPos.y -= speed;
+    if (ghost.currentDir == core::Keys::S)
+      ghostPos.y += speed;
+    if (ghost.currentDir == core::Keys::Q)
+      ghostPos.x -= speed;
+    if (ghost.currentDir == core::Keys::D)
+      ghostPos.x += speed;
+    _entities[ghost.entityIdx].setPos(ghostPos);
+  }
+}
 
 void PacmanGame::simulateGame(Event &e) {
   movePacman(e);
-  moveGhosts(this->_entities);
+  moveGhosts();
+
+  core::Vec2 pacLogical = {_entities[1].getPos().x + 2,
+                           _entities[1].getPos().y + 2};
+  int pacX = (pacLogical.x - 230 + 2) / 8;
+  int pacY = (pacLogical.y - 70 + 2) / 8;
+
+  if (pacX >= 0 && pacX < 28 && pacY >= 0 && pacY < 31 &&
+      _map[pacY][pacX] == '.') {
+    _map[pacY][pacX] = ' ';
+    _score += 10;
+    _dotsCount--;
+
+    std::string dotName =
+        "dot_" + std::to_string(pacY) + "_" + std::to_string(pacX);
+    for (auto &ent : _entities) {
+      if (ent.getName() == dotName) {
+        ent.setPos({-1000, -1000});
+        break;
+      }
+    }
+
+    if (_dotsCount == 0) {
+      LOG_INFO("WIN Pacman");
+      resetPositions();
+      _map.clear();
+      initGame();
+    }
+  }
 }
 
 extern "C" game::IGame *gameEntryPoint() { return new PacmanGame(); }
