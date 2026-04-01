@@ -24,41 +24,25 @@ void PacmanGame::initGame() {
           "# ########## ## ########## #", "#                          #",
           "############################"};
 
-  game::Entity arena_entity(
-      "arena", "assets/Game/Pacman/Arena_Empty.png",
-      "\e[0;34m|"
-      "########################################################|"
-      "##                        ####                        ##|"
-      "##  ########  ##########  ####  ##########  ########  ##|"
-      "##  ##    ##  ##      ##  ####  ##      ##  ##    ##  ##|"
-      "##  ########  ##########  ####  ##########  ########  ##|"
-      "##                                                    ##|"
-      "##  ########  ####  ################  ####  ########  ##|"
-      "##  ########  ####  ################  ####  ########  ##|"
-      "##            ####        ####        ####            ##|"
-      "############  ##########  ####  ##########  ############|"
-      "          ##  ##########  ####  ##########  ####        |"
-      "          ##  ####                    ####  ####        |"
-      "          ##  ####  #######  #######  ####  ####        |"
-      "############  ####  ###          ###  ####  ############|"
-      "                    ###          ###                    |"
-      "############  ####  ###          ###  ####  ############|"
-      "          ##  ####  ################  ####  ####        |"
-      "          ##  ####                    ####  ####        |"
-      "          ##  ####  ################  ####  ####        |"
-      "############  ####  ################  ####  ############|"
-      "##                        ####                        ##|"
-      "##  ########  ##########  ####  ##########  ########  ##|"
-      "##  ########  ##########  ####  ##########  ########  ##|"
-      "##      ####                                ####      ##|"
-      "######  ####  ####  ################  ####  ####  ######|"
-      "######  ####  ####  ################  ####  ####  ######|"
-      "##            ####        ####        ####            ##|"
-      "##  ####################  ####  ####################  ##|"
-      "##  ####################  ####  ####################  ##|"
-      "##                                                    ##|"
-      "########################################################|",
-      core::Vec2(230, 70), core::Vec2(230, 70));
+  game::Entity arena_entity("arena", "assets/Game/Pacman/Arena_Empty.png",
+                            "\e[0;34m|"
+                            "############################|"
+                            "# #### ##### ## ##### #### #|"
+                            "# #### ##### ## ##### #### #|"
+                            "# #### ## ######## ## #### #|"
+                            "#      ##    ##    ##      #|"
+                            "     # ##### ## ##### #     |"
+                            "     # ## ###  ### ## #     |"
+                            "          #      #          |"
+                            "     # ## ######## ## #     |"
+                            "     # ## ######## ## #     |"
+                            "#            ##            #|"
+                            "# #### ##### ## ##### #### #|"
+                            "###  # ## ######## ## #  ###|"
+                            "#      ##    ##    ##      #|"
+                            "# ########## ## ########## #|"
+                            "############################|",
+                            core::Vec2(230, 70), core::Vec2(230, 70));
   game::Entity pacman_entity("pacman", "assets/Game/Pacman/Pacman.png",
                              "\e[0;33m|C", core::Vec2(330, 202),
                              core::Vec2(330, 202));
@@ -66,15 +50,19 @@ void PacmanGame::initGame() {
   game::Entity redGhost_entity("red ghost", "assets/Game/Pacman/RedGhost.png",
                                "\e[0;31m|A", core::Vec2(346, 178),
                                core::Vec2(346, 178));
+  redGhost_entity.setSrcRect(core::Rect(0, 0, 16, 16));
   game::Entity blueGhost_entity(
       "blue ghost", "assets/Game/Pacman/BlueGhost.png", "\e[0;36m|A",
       core::Vec2(330, 186), core::Vec2(330, 186));
+  blueGhost_entity.setSrcRect(core::Rect(0, 0, 16, 16));
   game::Entity orangeGhost_entity(
       "orange ghost", "assets/Game/Pacman/OrangeGhost.png", "\e[0;33m|A",
       core::Vec2(346, 186), core::Vec2(346, 186));
+  orangeGhost_entity.setSrcRect(core::Rect(0, 0, 16, 16));
   game::Entity pinkGhost_entity(
       "pink ghost", "assets/Game/Pacman/PinkGhost.png", "\e[0;35m|A",
       core::Vec2(330, 178), core::Vec2(330, 178));
+  pinkGhost_entity.setSrcRect(core::Rect(0, 0, 16, 16));
 
   _entities.push_back(arena_entity);
   _entities.push_back(pacman_entity);
@@ -184,6 +172,24 @@ void PacmanGame::movePacman(Event &e) {
     core::Vec2 nextPosAttempt = getNextPos(currentPos, _nextDir);
     if (!isColliding(nextPosAttempt)) {
       _currentDir = _nextDir;
+
+      switch (_currentDir) {
+      case core::Keys::Z:
+        _entities[1].setSrcRect(core::Rect(0, 32, 16, 16));
+        break;
+      case core::Keys::S:
+        _entities[1].setSrcRect(core::Rect(0, 48, 16, 16));
+        break;
+      case core::Keys::Q:
+        _entities[1].setSrcRect(core::Rect(0, 16, 16, 16));
+        break;
+      case core::Keys::D:
+        _entities[1].setSrcRect(core::Rect(0, 0, 16, 16));
+        break;
+      default:
+        break;
+      }
+
       _entities[1].setPos(nextPosAttempt);
       return;
     }
@@ -193,23 +199,6 @@ void PacmanGame::movePacman(Event &e) {
     core::Vec2 forwardPos = getNextPos(currentPos, _currentDir);
     if (!isColliding(forwardPos))
       _entities[1].setPos(forwardPos);
-  }
-
-  switch (_currentDir) {
-  case core::Keys::Z:
-    _entities[1].setSrcRect(core::Rect(0, 32, 16, 16));
-    break;
-  case core::Keys::S:
-    _entities[1].setSrcRect(core::Rect(0, 48, 16, 16));
-    break;
-  case core::Keys::Q:
-    _entities[1].setSrcRect(core::Rect(0, 16, 16, 16));
-    break;
-  case core::Keys::D:
-    _entities[1].setSrcRect(core::Rect(0, 0, 16, 16));
-    break;
-  default:
-    break;
   }
 }
 
@@ -314,14 +303,22 @@ void PacmanGame::moveGhosts() {
     }
 
     float speed = 2;
-    if (ghost.currentDir == core::Keys::Z)
+    if (ghost.currentDir == core::Keys::Z) {
       ghostPos.y -= speed;
-    if (ghost.currentDir == core::Keys::S)
+      _entities[ghost.entityIdx].setSrcRect(core::Rect(64, 0, 16, 16));
+    }
+    if (ghost.currentDir == core::Keys::S) {
       ghostPos.y += speed;
-    if (ghost.currentDir == core::Keys::Q)
+      _entities[ghost.entityIdx].setSrcRect(core::Rect(96, 0, 16, 16));
+    }
+    if (ghost.currentDir == core::Keys::Q) {
       ghostPos.x -= speed;
-    if (ghost.currentDir == core::Keys::D)
+      _entities[ghost.entityIdx].setSrcRect(core::Rect(32, 0, 16, 16));
+    }
+    if (ghost.currentDir == core::Keys::D) {
+      _entities[ghost.entityIdx].setSrcRect(core::Rect(0, 0, 16, 16));
       ghostPos.x += speed;
+    }
     _entities[ghost.entityIdx].setPos(ghostPos);
   }
 }
