@@ -83,12 +83,12 @@ check_format:
 	@ $(LOG_TIME) "$(C_BLUE) CF $(C_GREEN) Code formated  $(C_RESET)"
 
 clean:
-	@ $(RM) $(OBJ)
-	@ $(LOG_TIME) "$(C_YELLOW) RM $(C_PURPLE) $(OBJ) $(C_RESET)"
+	@ $(RM) -r $(BUILD_DIR)
+	@ $(LOG_TIME) "$(C_YELLOW) RM $(C_PURPLE) $(BUILD_DIR) $(C_RESET)"
 
 fclean:
-	@ $(RM) -r $(NAME_release) $(NAME_debug) $(BUILD_DIR) ./lib/
-	@ $(LOG_TIME) "$(C_YELLOW) RM $(C_PURPLE) $(NAME_release) $(NAME_debug) \
+	@ $(RM) -r $(NAME_core) $(BUILD_DIR) ./lib/
+	@ $(LOG_TIME) "$(C_YELLOW) RM $(C_PURPLE) $(NAME_core) $(BUILD_DIR) ./lib/ \
 		$(C_RESET)"
 
 .NOTPARALLEL: re
