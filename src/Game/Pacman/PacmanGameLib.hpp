@@ -2,6 +2,8 @@
 
 #include "Game/Game.hpp"
 
+#define POWERUPTIME 520
+
 struct GhostState {
   size_t entityIdx;
   core::Keys currentDir;
@@ -16,6 +18,7 @@ private:
   int _score = 0;
   int _dotsCount = 0;
   bool _gameOver = false;
+  int _powerUpTime = 0;
 
   std::vector<GhostState> _ghosts;
 

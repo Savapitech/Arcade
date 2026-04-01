@@ -24,7 +24,6 @@
         packages = with pkgs;
           [
             compiledb
-            gcovr
           ] ++ (if !isDarwinAarch64 then [
             sfml
             ncurses
@@ -34,9 +33,6 @@
           ] else [
             libcxx
           ]) ++ [
-            criterion
-            clang
-            clang-tools
           ];
       };
     });

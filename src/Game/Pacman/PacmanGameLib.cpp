@@ -87,8 +87,20 @@ void PacmanGame::initGame() {
         bool isOutsideBlocks = (y >= 10 && y <= 19 && (x < 6 || x > 21));
 
         if (x > 0 && x < 27 && !isGhostHouse && !isOutsideBlocks && y != 14) {
-          _map[y][x] = '.';
           _dotsCount++;
+          if ((x == 1 || x == 26) && (y == 2 || y == 28)) {
+            _map[y][x] = '*';
+            game::Entity dot(std::string("dot_") + std::to_string(y) + "_" +
+                                 std::to_string(x),
+                             "assets/Game/Pacman/Character_Sprite_Cheat.png",
+                             "\e[0;33m|*",
+                             core::Vec2(240 + x * 8 - 6, 76 + y * 8 - 4),
+                             core::Vec2(240 + x * 8 - 6, 76 + y * 8 - 4));
+            dot.setSrcRect(core::Rect(100, 25, 8, 8));
+            _entities.push_back(dot);
+            continue;
+          }
+          _map[y][x] = '.';
           game::Entity dot(std::string("dot_") + std::to_string(y) + "_" +
                                std::to_string(x),
                            "assets/Game/Pacman/Pacman.png", "\e[0;33m|.",
@@ -238,10 +250,12 @@ void PacmanGame::moveGhosts() {
 
     if (std::abs(pacLogical.x - gLogical.x) < 6 &&
         std::abs(pacLogical.y - gLogical.y) < 6) {
-      _gameOver = true;
-      LOG_INFO("GMAME OVER PacMan");
-      resetPositions();
-      return;
+      if (_powerUpTime == 0) {
+        _gameOver = true;
+        LOG_INFO("GAME OVER PacMan");
+        resetPositions();
+        return;
+      }
     }
 
     bool isAligned =
@@ -325,12 +339,37 @@ void PacmanGame::moveGhosts() {
 
 void PacmanGame::simulateGame(Event &e) {
   movePacman(e);
+  if (_powerUpTime > 0)
+    _powerUpTime--;
   moveGhosts();
 
   core::Vec2 pacLogical = {_entities[1].getPos().x + 2,
                            _entities[1].getPos().y + 2};
   int pacX = (pacLogical.x - 230 + 2) / 8;
   int pacY = (pacLogical.y - 70 + 2) / 8;
+
+  if (pacX >= 0 && pacX < 28 && pacY >= 0 && pacY < 31 &&
+      _map[pacY][pacX] == '*') {
+    _powerUpTime = POWERUPTIME;
+    _map[pacY][pacX] = ' ';
+    _dotsCount--;
+
+    std::string dotName =
+        "dot_" + std::to_string(pacY) + "_" + std::to_string(pacX);
+    for (auto &ent : _entities) {
+      if (ent.getName() == dotName) {
+        ent.setPos({-1000, -1000});
+        break;
+      }
+    }
+
+    if (_dotsCount == 0) {
+      LOG_INFO("WIN Pacman");
+      resetPositions();
+      _map.clear();
+      initGame();
+    }
+  }
 
   if (pacX >= 0 && pacX < 28 && pacY >= 0 && pacY < 31 &&
       _map[pacY][pacX] == '.') {
