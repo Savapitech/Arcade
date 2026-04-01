@@ -48,7 +48,7 @@ void PacmanGame::initGame() {
                              core::Vec2(330, 202));
   pacman_entity.setSrcRect(core::Rect(0, 0, 16, 16));
   game::Entity redGhost_entity("red ghost", "assets/Game/Pacman/RedGhost.png",
-                               "\e[0;31m|A", core::Vec2(346, 178),
+                               "\e[0;31m|A", core::Vec2(340, 190),
                                core::Vec2(346, 178));
   redGhost_entity.setSrcRect(core::Rect(0, 0, 16, 16));
   game::Entity blueGhost_entity(
@@ -57,11 +57,11 @@ void PacmanGame::initGame() {
   blueGhost_entity.setSrcRect(core::Rect(0, 0, 16, 16));
   game::Entity orangeGhost_entity(
       "orange ghost", "assets/Game/Pacman/OrangeGhost.png", "\e[0;33m|A",
-      core::Vec2(346, 186), core::Vec2(346, 186));
+      core::Vec2(340, 186), core::Vec2(346, 186));
   orangeGhost_entity.setSrcRect(core::Rect(0, 0, 16, 16));
   game::Entity pinkGhost_entity(
       "pink ghost", "assets/Game/Pacman/PinkGhost.png", "\e[0;35m|A",
-      core::Vec2(330, 178), core::Vec2(330, 178));
+      core::Vec2(340, 178), core::Vec2(330, 178));
   pinkGhost_entity.setSrcRect(core::Rect(0, 0, 16, 16));
 
   _entities.push_back(arena_entity);
