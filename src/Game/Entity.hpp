@@ -7,7 +7,8 @@ namespace game {
 class Entity : public IEntity {
 private:
   const std::string _name;
-  const std::string _texturePath;
+  std::string _texturePath;
+  const std::string _basePath;
   std::string _asciiTexture;
   const core::Vec2 _startPos;
   const core::Vec2 _hitBoxSize;
@@ -23,6 +24,7 @@ public:
   const core::Vec2 getStartPos() const override { return _startPos; }
   const std::string getName() const override { return _name; }
   const std::string getPath() const override { return _texturePath; }
+  const std::string getBasePath() const override { return _basePath; }
   const std::string getAsciitexture() const override { return _asciiTexture; }
   const core::Vec2 getHitbox() const override { return _hitBoxSize; }
   void setX(float x) override { _pos.x = x; }
@@ -39,5 +41,6 @@ public:
   void setAsciitexture(const std::string &ascii) override {
     _asciiTexture = ascii;
   }
+  void setPath(const std::string &path) override { _texturePath = path; }
 };
 } // namespace game

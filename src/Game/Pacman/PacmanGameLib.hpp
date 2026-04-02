@@ -2,11 +2,12 @@
 
 #include "Game/Game.hpp"
 
-#define POWERUPTIME 520
+#define POWERUPTIME 200
 
 struct GhostState {
   size_t entityIdx;
   core::Keys currentDir;
+  bool living = true;
 };
 
 class PacmanGame : public game::AGame {
@@ -25,6 +26,8 @@ private:
   bool isColliding(core::Vec2 pos) const;
   void movePacman(Event &e);
   void moveGhosts();
+  void fearedGhosts();
+  void eatenGhosts(GhostState &ghost);
   void resetPositions();
 
 public:
