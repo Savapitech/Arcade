@@ -462,6 +462,8 @@ void PacmanGame::fearedGhosts() {
       eatenGhosts(ghost);
       continue;
     }
+    _entities[ghost.entityIdx].setPath("assets/Game/Pacman/Feared_Ghost.png");
+    _entities[ghost.entityIdx].setSrcRect(core::Rect(0, 0, 16, 16));
     core::Vec2 ghostPos = _entities[ghost.entityIdx].getPos();
     core::Vec2 gLogical = {ghostPos.x + 2.75f, ghostPos.y + 4};
 
@@ -551,11 +553,17 @@ void PacmanGame::fearedGhosts() {
 
 void PacmanGame::simulateGame(Event &e) {
   movePacman(e);
+  int last_time = _powerUpTime;
   if (_powerUpTime > 0) {
     _powerUpTime--;
     fearedGhosts();
   } else
     moveGhosts();
+  if (last_time == 1 && _powerUpTime == 0) {
+    for (auto &ghost : _ghosts)
+      _entities[ghost.entityIdx].setPath(
+          _entities[ghost.entityIdx].getBasePath());
+  }
 
   core::Vec2 pacLogical = {_entities[1].getPos().x + 2,
                            _entities[1].getPos().y + 2};
