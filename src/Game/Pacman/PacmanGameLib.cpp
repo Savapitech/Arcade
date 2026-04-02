@@ -26,22 +26,22 @@ void PacmanGame::initGame() {
 
   game::Entity arena_entity("arena", "assets/Game/Pacman/Arena_Empty.png",
                             "\e[0;34m|"
-                            "############################|"
-                            "# #### ##### ## ##### #### #|"
-                            "# #### ##### ## ##### #### #|"
-                            "# #### ## ######## ## #### #|"
-                            "#      ##    ##    ##      #|"
-                            "     # ##### ## ##### #     |"
-                            "     # ## ###  ### ## #     |"
-                            "          #      #          |"
-                            "     # ## ######## ## #     |"
-                            "     # ## ######## ## #     |"
-                            "#            ##            #|"
-                            "# #### ##### ## ##### #### #|"
-                            "###  # ## ######## ## #  ###|"
-                            "#      ##    ##    ##      #|"
-                            "# ########## ## ########## #|"
-                            "############################|",
+          "############################|" "#            ##            #|"
+          "# #### ##### ## ##### #### #|" "# #  # #   # ## #   # #  # #|"
+          "# #### ##### ## ##### #### #|" "#                          #|"
+          "# #### ## ######## ## #### #|" "# #### ## ######## ## #### #|"
+          "#      ##    ##    ##      #|" "###### ##### ## ##### ######|"
+          "     # ##### ## ##### #     |" "     # ##          ## #     |"
+          "     # ## ###  ### ## #     |" "###### ## #      # ## ######|"
+          "          #      #          |" "###### ## #      # ## ######|"
+          "     # ## ######## ## #     |" "     # ##          ## #     |"
+          "     # ## ######## ## #     |" "###### ## ######## ## ######|"
+          "#            ##            #|" "# #### ##### ## ##### #### #|"
+          "# #### ##### ## ##### #### #|" "#    #                #    #|"
+          "###  # ## ######## ## #  ###|" "###  # ## ######## ## #  ###|"
+          "#      ##    ##    ##      #|" "# ########## ## ########## #|"
+          "# ########## ## ########## #|" "#                          #|"
+          "############################|",
                             core::Vec2(230, 70), core::Vec2(230, 70));
   game::Entity pacman_entity("pacman", "assets/Game/Pacman/Pacman.png",
                              "\e[0;33m|C", core::Vec2(330, 202),
@@ -80,6 +80,17 @@ void PacmanGame::initGame() {
   _dotsCount = 0;
   _gameOver = false;
 
+
+  const int CHAR_X_SIZE = 8; // match your actual define
+  const int CHAR_Y_SIZE = 16; // match your actual define
+
+  const int arenaPixelX = 230;
+  const int arenaPixelY = 70;
+
+  // Snap arena origin to char grid
+  const int arenaCharX = arenaPixelX / CHAR_X_SIZE;
+  const int arenaCharY = arenaPixelY / CHAR_Y_SIZE;
+
   for (int y = 0; y < 31; ++y) {
     for (int x = 0; x < 28; ++x) {
       if (_map[y][x] == ' ') {
@@ -88,14 +99,17 @@ void PacmanGame::initGame() {
 
         if (x > 0 && x < 27 && !isGhostHouse && !isOutsideBlocks && y != 14) {
           _dotsCount++;
+
+          float dotPixelX = (arenaCharX + x) * CHAR_X_SIZE;
+          float dotPixelY = (arenaCharY + y) * CHAR_Y_SIZE;
           if ((x == 1 || x == 26) && (y == 2 || y == 28)) {
             _map[y][x] = '*';
             game::Entity dot(std::string("dot_") + std::to_string(y) + "_" +
                                  std::to_string(x),
                              "assets/Game/Pacman/Character_Sprite_Cheat.png",
                              "\e[0;33m|*",
-                             core::Vec2(240 + x * 8 - 6, 76 + y * 8 - 4),
-                             core::Vec2(240 + x * 8 - 6, 76 + y * 8 - 4));
+                             core::Vec2(dotPixelX, dotPixelY),
+                             core::Vec2(dotPixelX, dotPixelY));
             dot.setSrcRect(core::Rect(100, 25, 8, 8));
             _entities.push_back(dot);
             continue;
@@ -104,8 +118,8 @@ void PacmanGame::initGame() {
           game::Entity dot(std::string("dot_") + std::to_string(y) + "_" +
                                std::to_string(x),
                            "assets/Game/Pacman/Pacman.png", "\e[0;33m|.",
-                           core::Vec2(240 + x * 8 - 4, 76 + y * 8 - 4),
-                           core::Vec2(240 + x * 8 - 4, 76 + y * 8 - 4));
+                           core::Vec2(dotPixelX, dotPixelY),
+                           core::Vec2(dotPixelX, dotPixelY));
           dot.setSrcRect(core::Rect(6, 6, 4, 4));
           _entities.push_back(dot);
         }

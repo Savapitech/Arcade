@@ -37,7 +37,7 @@ void myPrintw(core::Vec2 pos, std::string asciiTexture) {
     if (linebreak != std::string::npos)
       custom_print(pos, asciiTexture);
     else
-      mvprintw(((int)pos.y / CHAR_Y_SIZE), ((int)pos.x / CHAR_X_SIZE), "%s",
+      mvprintw(((int)(pos.y)  / CHAR_Y_SIZE), ((int)(pos.x)  / CHAR_X_SIZE), "%s",
                asciiTexture.c_str());
     attroff(COLOR_PAIR(it->second));
   }
