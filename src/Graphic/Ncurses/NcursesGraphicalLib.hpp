@@ -6,8 +6,8 @@
 #include "Core/Utils.hpp"
 #include "Graphic/Graphic.hpp"
 
-#define CHAR_Y_SIZE 16
-#define CHAR_X_SIZE 8
+#define CHAR_Y_SIZE 8
+#define CHAR_X_SIZE 4
 
 class NcursesData {
 private:
