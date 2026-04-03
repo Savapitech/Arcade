@@ -24,6 +24,16 @@ void PacmanGame::initGame() {
           "# ########## ## ########## #", "#                          #",
           "############################"};
 
+  _entities.clear();
+  _texts.clear();
+  _ghosts.clear();
+  _score = 0;
+  _dotsCount = 0;
+  _gameOver = false;
+  _powerUpTime = 0;
+  _currentDir = core::Keys::Space;
+  _nextDir = core::Keys::Space;
+
   game::Entity arena_entity(
       "arena", "assets/Game/Pacman/Arena_Empty.png",
       "\e[0;34m|"
