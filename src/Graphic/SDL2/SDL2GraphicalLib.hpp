@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 #include <vector>
 
@@ -12,6 +13,7 @@ private:
   SDL_Window *_window = nullptr;
   SDL_Renderer *_renderer = nullptr;
   bool _isOpened = false;
+  TTF_Font *_font = nullptr;
 
   std::vector<SDL_Texture *> _textureTab;
   std::vector<SDL_Rect> _rectTab;
@@ -25,7 +27,8 @@ public:
   bool isOpen() override;
 
   void initGraphic(const std::vector<game::Entity> &) override;
-  void drawEntities(const std::vector<game::Entity> &) override;
+  void drawEntities(const std::vector<game::Entity> &,
+                    const std::vector<game::Text> &) override;
   void fillEvent(Event &event) override;
   void destroyGraphic() override;
 

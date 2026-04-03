@@ -19,6 +19,10 @@ void SDL2::openWindow(size_t heigth, size_t width,
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
     throw std::runtime_error(SDL_GetError());
 
+  if (TTF_Init() == -1)
+    throw std::runtime_error(TTF_GetError());
+  this->_font = TTF_OpenFont("assets/font.ttf", 40);
+
   int imgFlags = IMG_INIT_PNG;
   if ((IMG_Init(imgFlags) & imgFlags) == 0) {
     SDL_Quit();
@@ -62,6 +66,11 @@ void SDL2::closeWindow() {
     this->_window = nullptr;
   }
 
+  if (this->_font) {
+    TTF_CloseFont(this->_font);
+    this->_font = nullptr;
+  }
+  TTF_Quit();
   IMG_Quit();
   SDL_Quit();
 }
@@ -108,7 +117,8 @@ void SDL2::destroyGraphic() {
   this->_rectTab.clear();
 }
 
-void SDL2::drawEntities(const std::vector<game::Entity> &entities) {
+void SDL2::drawEntities(const std::vector<game::Entity> &entities,
+                        const std::vector<game::Text> &texts) {
   SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, 255);
   SDL_RenderClear(this->_renderer);
 
@@ -128,9 +138,32 @@ void SDL2::drawEntities(const std::vector<game::Entity> &entities) {
       this->_rectTab[i].w = static_cast<int>(src.width);
       this->_rectTab[i].h = static_cast<int>(src.height);
     }
+    if (!entities[i].isHidden()) {
+      SDL_RenderCopy(this->_renderer, this->_textureTab[i], srcPtr,
+                     &this->_rectTab[i]);
+    }
+  }
 
-    SDL_RenderCopy(this->_renderer, this->_textureTab[i], srcPtr,
-                   &this->_rectTab[i]);
+  if (this->_font) {
+    SDL_Color color = {255, 255, 255, 255};
+    for (const auto &text : texts) {
+      if (!text.isHidden()) {
+        SDL_Surface *surfaceMessage =
+            TTF_RenderText_Solid(this->_font, text.getText().c_str(), color);
+        if (!surfaceMessage)
+          continue;
+        SDL_Texture *Message =
+            SDL_CreateTextureFromSurface(this->_renderer, surfaceMessage);
+        SDL_Rect Message_rect;
+        Message_rect.x = static_cast<int>(text.getPos().x);
+        Message_rect.y = static_cast<int>(text.getPos().y);
+        Message_rect.w = surfaceMessage->w;
+        Message_rect.h = surfaceMessage->h;
+        SDL_RenderCopy(this->_renderer, Message, nullptr, &Message_rect);
+        SDL_FreeSurface(surfaceMessage);
+        SDL_DestroyTexture(Message);
+      }
+    }
   }
 
   SDL_RenderPresent(this->_renderer);

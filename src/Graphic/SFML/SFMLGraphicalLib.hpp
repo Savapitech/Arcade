@@ -11,6 +11,7 @@ private:
 
   std::vector<sf::Sprite> _spriteTab;
   std::vector<sf::Texture> _textureTab;
+  sf::Font _font;
 
 public:
   void openWindow(size_t heigth, size_t width, const std::string &windowName,
@@ -19,7 +20,8 @@ public:
   bool isOpen() override;
 
   void initGraphic(const std::vector<game::Entity> &) override;
-  void drawEntities(const std::vector<game::Entity> &) override;
+  void drawEntities(const std::vector<game::Entity> &,
+                    const std::vector<game::Text> &) override;
   void fillEvent(Event &event) override;
   virtual void destroyGraphic() override;
 

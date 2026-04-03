@@ -27,7 +27,7 @@ CXXFLAGS += -std=c++20 -iquote src
 
 SFML_LDFLAGS += $(shell pkg-config --cflags --libs sfml-graphics sfml-window sfml-system)
 NCURSES_LDFLAGS += $(shell pkg-config --cflags --libs ncurses)
-SDL2_LDFLAGS += $(shell pkg-config --cflags --libs sdl2 SDL2_image)
+SDL2_LDFLAGS += $(shell pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf)
 
 include utils.mk
 
@@ -60,10 +60,11 @@ $(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared -fPIC, lib/arc
 $(eval $(call mk-profile, ncurses, SRC_NCURSES, $(NCURSES_LDFLAGS) -shared -fPIC, lib/arcade_ncurses.so))
 $(eval $(call mk-profile, sdl2, SRC_SDL2, $(SDL2_LDFLAGS) -shared -fPIC, lib/arcade_sdl2.so))
 $(eval $(call mk-profile, pacman, SRC_PACMAN, -shared -fPIC, lib/arcade_pacman.so))
+$(eval $(call mk-profile, snake, SRC_SNAKE, -shared -fPIC, lib/arcade_snake.so))
 
 core: $(NAME_core)
 
-games: $(NAME_pacman)
+games: $(NAME_pacman) $(NAME_snake)
 
 graphicals: $(NAME_sfml) $(NAME_ncurses) $(NAME_sdl2)
 

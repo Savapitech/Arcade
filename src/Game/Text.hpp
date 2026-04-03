@@ -29,7 +29,7 @@ public:
     _pos.y = y;
   }
   void setPos(core::Vec2 pos) { _pos = pos; }
-  bool isHidden() { return _hidden; }
+  bool isHidden() const { return _hidden; }
   void setHidden(bool hidden) { _hidden = hidden; }
 };
 } // namespace game

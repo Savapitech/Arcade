@@ -4,6 +4,7 @@
 
 #include "Core/Event.hpp"
 #include "Game/Entity.hpp"
+#include "Game/Text.hpp"
 
 namespace graphic {
 class IGraphic {
@@ -15,7 +16,8 @@ public:
 
   virtual void initGraphic(const std::vector<game::Entity> &) = 0;
   virtual void destroyGraphic() = 0;
-  virtual void drawEntities(const std::vector<game::Entity> &) = 0;
+  virtual void drawEntities(const std::vector<game::Entity> &,
+                            const std::vector<game::Text> &) = 0;
   virtual void fillEvent(Event &event) = 0;
 
   virtual ~IGraphic() = default;

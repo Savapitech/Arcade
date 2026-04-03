@@ -91,7 +91,8 @@ void Ncurses::initGraphic(const std::vector<game::Entity> &entities) {
 
 void Ncurses::destroyGraphic() { this->_dataTab.clear(); }
 
-void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
+void Ncurses::drawEntities(const std::vector<game::Entity> &entities,
+                           const std::vector<game::Text> &texts) {
   erase();
   this->_dataTab.clear();
   for (auto &entity : entities)
@@ -100,6 +101,15 @@ void Ncurses::drawEntities(const std::vector<game::Entity> &entities) {
 
   for (NcursesData &data : this->_dataTab)
     myPrintw(data.getPos(), data.getAsciiTexture());
+
+  for (const auto &text : texts) {
+    if (!text.isHidden()) {
+      int y = static_cast<int>(text.getPos().y) / CHAR_Y_SIZE;
+      int x = static_cast<int>(text.getPos().x) / CHAR_X_SIZE;
+      mvprintw(y, x, "%s", text.getText().c_str());
+    }
+  }
+
   refresh();
 }
 

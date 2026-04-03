@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <stdexcept>
 
 #include "Graphic/Graphic.hpp"
 #include "SFMLGraphicalLib.hpp"
@@ -10,6 +11,8 @@ void SFML::openWindow(size_t heigth, size_t width,
       {static_cast<unsigned int>(heigth), static_cast<unsigned int>(width)});
   this->_window.create(video, windowName);
   event.setCloseState(true);
+  if (!this->_font.openFromFile("assets/font.ttf"))
+    throw std::runtime_error("Cannot load font");
 }
 
 void SFML::closeWindow() {
@@ -39,7 +42,8 @@ void SFML::destroyGraphic() {
   this->_spriteTab.clear();
 }
 
-void SFML::drawEntities(const std::vector<game::Entity> &entities) {
+void SFML::drawEntities(const std::vector<game::Entity> &entities,
+                        const std::vector<game::Text> &texts) {
   this->_spriteTab.clear();
   this->_textureTab.clear();
 
@@ -62,11 +66,22 @@ void SFML::drawEntities(const std::vector<game::Entity> &entities) {
   this->_window.clear();
   int i = 0;
 
-  for (sf::Sprite &sprite : this->_spriteTab){
+  for (sf::Sprite &sprite : this->_spriteTab) {
     if (!entities[i].isHidden())
-    this->_window.draw(sprite);
+      this->_window.draw(sprite);
     i++;
   }
+
+  for (const auto &text : texts) {
+    if (!text.isHidden()) {
+      sf::Text sfText(this->_font, text.getText(), 40);
+      sfText.setPosition({static_cast<float>(text.getPos().x),
+                          static_cast<float>(text.getPos().y)});
+      sfText.setFillColor(sf::Color::White);
+      this->_window.draw(sfText);
+    }
+  }
+
   this->_window.display();
 }
 
