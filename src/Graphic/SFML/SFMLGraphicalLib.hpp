@@ -4,13 +4,15 @@
 #include <SFML/Window.hpp>
 
 #include "Graphic/Graphic.hpp"
+#include <memory>
 
 class SFML : public graphic::IGraphic {
 private:
   sf::RenderWindow _window;
 
   std::vector<sf::Sprite> _spriteTab;
-  std::vector<sf::Texture> _textureTab;
+  std::vector<std::unique_ptr<sf::Texture>> _textureTab;
+  std::vector<std::string> _pathsTab;
   sf::Font _font;
 
 public:

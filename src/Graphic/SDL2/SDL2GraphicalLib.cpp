@@ -82,6 +82,7 @@ void SDL2::initGraphic(const std::vector<game::Entity> &entities) {
 
   this->_textureTab.reserve(entities.size());
   this->_rectTab.reserve(entities.size());
+  this->_pathsTab.reserve(entities.size());
 
   for (const auto &entity : entities) {
     SDL_Surface *surface = IMG_Load(entity.getPath().c_str());
@@ -107,6 +108,7 @@ void SDL2::initGraphic(const std::vector<game::Entity> &entities) {
 
     this->_textureTab.push_back(texture);
     this->_rectTab.push_back(destRect);
+    this->_pathsTab.push_back(entity.getPath());
   }
 }
 
@@ -115,6 +117,7 @@ void SDL2::destroyGraphic() {
     SDL_DestroyTexture(texture);
   this->_textureTab.clear();
   this->_rectTab.clear();
+  this->_pathsTab.clear();
 }
 
 void SDL2::drawEntities(const std::vector<game::Entity> &entities,
@@ -122,9 +125,21 @@ void SDL2::drawEntities(const std::vector<game::Entity> &entities,
   SDL_SetRenderDrawColor(this->_renderer, 0, 0, 0, 255);
   SDL_RenderClear(this->_renderer);
 
-  for (size_t i = 0; i < this->_textureTab.size() &&
-                     i < this->_rectTab.size() && i < entities.size();
+  for (size_t i = 0;
+       i < this->_textureTab.size() && i < this->_rectTab.size() &&
+       i < entities.size() && i < this->_pathsTab.size();
        i++) {
+    if (this->_pathsTab[i] != entities[i].getPath()) {
+      SDL_DestroyTexture(this->_textureTab[i]);
+      SDL_Surface *surface = IMG_Load(entities[i].getPath().c_str());
+      if (surface) {
+        this->_textureTab[i] =
+            SDL_CreateTextureFromSurface(this->_renderer, surface);
+        SDL_FreeSurface(surface);
+      }
+      this->_pathsTab[i] = entities[i].getPath();
+    }
+
     this->_rectTab[i].x = static_cast<int>(entities[i].getPos().x);
     this->_rectTab[i].y = static_cast<int>(entities[i].getPos().y);
 

@@ -25,51 +25,59 @@ bool SFML::isOpen() { return this->_window.isOpen(); }
 void SFML::initGraphic(const std::vector<game::Entity> &entities) {
   this->_spriteTab.clear();
   this->_textureTab.clear();
+  this->_pathsTab.clear();
 
-  this->_textureTab.reserve(entities.size());
-  this->_spriteTab.reserve(entities.size());
+  const size_t n = entities.size();
 
-  for (auto &entity : entities) {
-    this->_textureTab.push_back(sf::Texture(entity.getPath()));
-    this->_spriteTab.push_back(sf::Sprite(this->_textureTab.back()));
-    this->_spriteTab.back().setPosition(
-        {(float)entity.getStartPos().x, (float)entity.getStartPos().y});
+  this->_textureTab.resize(n);
+  for (size_t i = 0; i < n; ++i) {
+    this->_textureTab[i] = std::make_unique<sf::Texture>();
+    (void)this->_textureTab[i]->loadFromFile(entities[i].getPath());
+    this->_pathsTab.push_back(entities[i].getPath());
+  }
+
+  this->_spriteTab.reserve(n);
+  for (size_t i = 0; i < n; ++i) {
+    this->_spriteTab.emplace_back(*this->_textureTab[i]);
+    this->_spriteTab.back().setPosition({(float)entities[i].getStartPos().x,
+                                         (float)entities[i].getStartPos().y});
   }
 }
 
 void SFML::destroyGraphic() {
   this->_textureTab.clear();
   this->_spriteTab.clear();
+  this->_pathsTab.clear();
 }
 
 void SFML::drawEntities(const std::vector<game::Entity> &entities,
                         const std::vector<game::Text> &texts) {
-  this->_spriteTab.clear();
-  this->_textureTab.clear();
+  for (size_t i = 0;
+       i < this->_textureTab.size() && i < this->_spriteTab.size() &&
+       i < entities.size() && i < this->_pathsTab.size();
+       i++) {
+    if (this->_pathsTab[i] != entities[i].getPath()) {
+      (void)this->_textureTab[i]->loadFromFile(entities[i].getPath());
+      this->_spriteTab[i].setTexture(*this->_textureTab[i], true);
+      this->_pathsTab[i] = entities[i].getPath();
+    }
 
-  this->_textureTab.reserve(entities.size());
-  this->_spriteTab.reserve(entities.size());
+    this->_spriteTab[i].setPosition(
+        {(float)entities[i].getPos().x, (float)entities[i].getPos().y});
 
-  for (auto &entity : entities) {
-    this->_textureTab.push_back(sf::Texture(entity.getPath()));
-    this->_spriteTab.push_back(sf::Sprite(this->_textureTab.back()));
-    this->_spriteTab.back().setPosition(
-        {(float)entity.getPos().x, (float)entity.getPos().y});
-
-    core::Rect src = entity.getSrcRect();
+    core::Rect src = entities[i].getSrcRect();
     if (src.width > 0 && src.height > 0) {
-      this->_spriteTab.back().setTextureRect(sf::IntRect(
+      this->_spriteTab[i].setTextureRect(sf::IntRect(
           {static_cast<int>(src.x), static_cast<int>(src.y)},
           {static_cast<int>(src.width), static_cast<int>(src.height)}));
     }
   }
-  this->_window.clear();
-  int i = 0;
 
-  for (sf::Sprite &sprite : this->_spriteTab) {
+  this->_window.clear();
+
+  for (size_t i = 0; i < this->_spriteTab.size() && i < entities.size(); i++) {
     if (!entities[i].isHidden())
-      this->_window.draw(sprite);
-    i++;
+      this->_window.draw(this->_spriteTab[i]);
   }
 
   for (const auto &text : texts) {

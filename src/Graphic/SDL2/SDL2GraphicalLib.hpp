@@ -17,6 +17,7 @@ private:
 
   std::vector<SDL_Texture *> _textureTab;
   std::vector<SDL_Rect> _rectTab;
+  std::vector<std::string> _pathsTab;
 
   core::Keys convertSDLKey(SDL_Keycode keycode) const;
 
