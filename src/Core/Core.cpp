@@ -35,6 +35,7 @@ core::Core::Core(const std::string &graphicPath)
       if (graphical == nullptr)
         throw std::runtime_error("Failed while loading lib");
       this->_graphicalTab.push_back(std::move(graphical));
+      this->_graphicNames.push_back(entry.path().filename().string());
       LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
       libIdx++;
       continue;
@@ -44,6 +45,7 @@ core::Core::Core(const std::string &graphicPath)
             std::make_unique<DLLoader<game::IGame>>(entry.path().string()));
         this->_gameTab.push_back(
             _gameLoader.back()->getInstance("gameEntryPoint"));
+        this->_gameNames.push_back(entry.path().filename().string());
         LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
       } catch (const std::exception &e) {
         throw std::runtime_error("Failed while loading lib");
@@ -52,11 +54,6 @@ core::Core::Core(const std::string &graphicPath)
   }
   if (this->_gameTab.size() < 1 || this->_graphicalTab.size() < 1)
     throw std::runtime_error("No game or graphical lib");
-}
-
-core::Core::~Core() {
-  // this->_graphicalTab.clear();
-  // this->gameTab.clear();
 }
 
 void core::Core::switchGraphicalLib(Event &ev,
@@ -76,12 +73,17 @@ void core::Core::switchGraphicalLib(Event &ev,
 
 void core::Core::run() {
   Event event;
+  this->_state = State::MENU;
+  this->_menu =
+      std::make_unique<core::Menu>(this->_graphicNames, this->_gameNames);
+  this->_menu->setGraphicIdx(this->_graphicLibIdx);
+  this->_menu->setGameIdx(this->_gameLibIdx);
+  this->_menu->initGame();
 
   LOG_DEBUG("Graphic idx [" + std::to_string(_graphicLibIdx) + "]");
   this->_graphicalTab[_graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
   this->_gameTab[_gameLibIdx]->initGame();
-  this->_graphicalTab[_graphicLibIdx]->initGraphic(
-      this->_gameTab[_gameLibIdx]->getEntities());
+  this->_graphicalTab[_graphicLibIdx]->initGraphic(this->_menu->getEntities());
 
   auto lastTime = std::chrono::steady_clock::now();
   auto timeSinceLastUpdate = std::chrono::duration<double, std::milli>::zero();
@@ -104,18 +106,81 @@ void core::Core::run() {
       event.clear();
       this->_graphicalTab[_graphicLibIdx]->fillEvent(event);
 
-      this->_gameTab[_gameLibIdx]->simulateGame(event);
+      std::vector<core::Keys> keysToProcess;
+      while (!event.getKeyStack().empty()) {
+        keysToProcess.push_back(event.getKeyStack().top());
+        event.getKeyStack().pop();
+      }
 
-      /*-- TMP --*/
-      this->switchGraphicalLib(event,
-                               this->_gameTab[_gameLibIdx]->getEntities());
-      /*-- TMP --*/
+      for (auto it = keysToProcess.rbegin(); it != keysToProcess.rend(); ++it) {
+        core::Keys k = *it;
+        if (k == core::Keys::E) {
+          event.setCloseState(false);
+        } else if (k == core::Keys::M) {
+          _state = (_state == State::GAME) ? State::MENU : State::GAME;
+          if (_state == State::GAME) {
+            _gameTab[_gameLibIdx]->initGame();
+          }
+          this->_graphicalTab[_graphicLibIdx]->initGraphic(
+              _state == State::MENU ? _menu->getEntities()
+                                    : _gameTab[_gameLibIdx]->getEntities());
+        } else if (k == core::Keys::R) {
+          _gameTab[_gameLibIdx]->initGame();
+          if (_state == State::GAME)
+            this->_graphicalTab[_graphicLibIdx]->initGraphic(
+                _gameTab[_gameLibIdx]->getEntities());
+        } else if (k == core::Keys::Enter && _state == State::MENU) {
+          _state = State::GAME;
+          std::string selGame = _menu->getSelectedGame();
+          std::string selGraphic = _menu->getSelectedGraphic();
+
+          for (size_t i = 0; i < _gameNames.size(); i++)
+            if (_gameNames[i] == selGame)
+              _gameLibIdx = i;
+
+          int newIdx = _graphicLibIdx;
+          for (size_t i = 0; i < _graphicNames.size(); i++)
+            if (_graphicNames[i] == selGraphic)
+              newIdx = i;
+
+          if (newIdx != _graphicLibIdx) {
+            this->_graphicalTab[_graphicLibIdx]->destroyGraphic();
+            this->_graphicalTab[_graphicLibIdx]->closeWindow();
+            _graphicLibIdx = newIdx;
+            this->_graphicalTab[_graphicLibIdx]->openWindow(1920, 1080,
+                                                            "arcade", event);
+          }
+
+          this->_gameTab[_gameLibIdx]->initGame();
+          this->_graphicalTab[_graphicLibIdx]->initGraphic(
+              this->_gameTab[_gameLibIdx]->getEntities());
+        } else {
+          event.addKey(k);
+        }
+      }
+
+      if (_state == State::MENU) {
+        this->_menu->simulateGame(event);
+      } else {
+        this->_gameTab[_gameLibIdx]->simulateGame(event);
+      }
+
+      this->switchGraphicalLib(
+          event, _state == State::MENU ? _menu->getEntities()
+                                       : _gameTab[_gameLibIdx]->getEntities());
     }
 
     while (timeSinceLastUpdateGraphic >= timePerTickGraphic) {
       timeSinceLastUpdateGraphic -= timePerTickGraphic;
-      this->_graphicalTab[_graphicLibIdx]->drawEntities(
-          this->_gameTab[_gameLibIdx]->getEntities());
+
+      if (_state == State::MENU) {
+        this->_graphicalTab[_graphicLibIdx]->drawEntities(_menu->getEntities(),
+                                                          _menu->getTexts());
+      } else {
+        this->_graphicalTab[_graphicLibIdx]->drawEntities(
+            _gameTab[_gameLibIdx]->getEntities(),
+            _gameTab[_gameLibIdx]->getTexts());
+      }
     }
   }
   this->_graphicalTab[_graphicLibIdx]->destroyGraphic();
