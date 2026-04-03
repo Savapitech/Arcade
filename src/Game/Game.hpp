@@ -11,6 +11,7 @@ namespace game {
 class IGame {
 public:
   virtual const std::vector<Entity> &getEntities() const = 0;
+  virtual const std::vector<Text> &getTexts() const = 0;
   virtual void initGame() = 0;
   virtual void simulateGame(Event &ev) = 0;
   virtual void stopGame() = 0;
@@ -25,8 +26,10 @@ protected:
   std::vector<game::Text> _texts;
 
 public:
-  const std::vector<game::Entity> &getEntities() const { return _entities; }
-  const std::vector<game::Text> &getText() const { return _texts; }
-  void stopGame() { _running = false; }
+  const std::vector<game::Entity> &getEntities() const override {
+    return _entities;
+  }
+  const std::vector<game::Text> &getTexts() const override { return _texts; }
+  void stopGame() override { _running = false; }
 };
 } // namespace game
