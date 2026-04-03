@@ -564,7 +564,7 @@ void PacmanGame::fearedGhosts() {
       }
     }
 
-    float speed = 1.5;
+    float speed = 1;
     if (ghost.currentDir == core::Keys::Z)
       ghostPos.y -= speed;
     if (ghost.currentDir == core::Keys::S)
