@@ -12,6 +12,9 @@ SRC_SDL2 := $(wildcard src/Graphic/SDL2/*.cpp)
 SRC_PACMAN := $(wildcard src/Game/Pacman/*.cpp)
 SRC_PACMAN += src/Game/Entity.cpp
 
+SRC_MINESWEEPER := $(wildcard src/Game/Minesweeper/*.cpp)
+SRC_MINESWEEPER += src/Game/Entity.cpp
+
 BUILD_DIR := .build
 
 CXXFLAGS += -Wall -Wextra -Werror=write-strings -g
@@ -57,10 +60,11 @@ $(eval $(call mk-profile, sfml, SRC_SFML, $(SFML_LDFLAGS) -shared -fPIC, lib/arc
 $(eval $(call mk-profile, ncurses, SRC_NCURSES, $(NCURSES_LDFLAGS) -shared -fPIC, lib/arcade_ncurses.so))
 $(eval $(call mk-profile, sdl2, SRC_SDL2, $(SDL2_LDFLAGS) -shared -fPIC, lib/arcade_sdl2.so))
 $(eval $(call mk-profile, pacman, SRC_PACMAN, -shared -fPIC, lib/arcade_pacman.so))
+$(eval $(call mk-profile, minesweeper, SRC_MINESWEEPER, -shared -fPIC, lib/arcade_minesweeper.so))
 
 core: $(NAME_core)
 
-games: $(NAME_pacman)
+games: $(NAME_pacman) $(NAME_minesweeper)
 
 graphicals: $(NAME_sfml) $(NAME_ncurses) $(NAME_sdl2)
 
