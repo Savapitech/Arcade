@@ -19,7 +19,7 @@ public:
   virtual void setY(float y) = 0;
   virtual void setPos(float x, float y) = 0;
   virtual void setPos(core::Vec2 pos) = 0;
-  virtual bool isHidden() = 0;
+  virtual bool isHidden() const = 0;
   virtual void setHidden(bool hidden) = 0;
   virtual core::Rect getSrcRect() const = 0;
   virtual void setSrcRect(core::Rect rect) = 0;

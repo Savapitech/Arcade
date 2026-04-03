@@ -50,6 +50,8 @@ core::Core::Core(const std::string &graphicPath)
       }
     }
   }
+  if (this->_gameTab.size() < 1 || this->_graphicalTab.size() < 1)
+    throw std::runtime_error("No game or graphical lib");
 }
 
 core::Core::~Core() {

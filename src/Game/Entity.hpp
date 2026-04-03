@@ -34,7 +34,7 @@ public:
     _pos.y = y;
   }
   void setPos(core::Vec2 pos) override { _pos = pos; }
-  bool isHidden() override { return _hidden; }
+  bool isHidden() const override { return _hidden; }
   void setHidden(bool hidden) override { _hidden = hidden; }
   core::Rect getSrcRect() const override { return _srcRect; }
   void setSrcRect(core::Rect rect) override { _srcRect = rect; }

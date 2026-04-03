@@ -60,8 +60,13 @@ void SFML::drawEntities(const std::vector<game::Entity> &entities) {
     }
   }
   this->_window.clear();
-  for (sf::Sprite &sprite : this->_spriteTab)
+  int i = 0;
+
+  for (sf::Sprite &sprite : this->_spriteTab){
+    if (!entities[i].isHidden())
     this->_window.draw(sprite);
+    i++;
+  }
   this->_window.display();
 }
 
