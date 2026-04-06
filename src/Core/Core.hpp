@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "Core/Database.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Game.hpp"
 #include "Graphic/Graphic.hpp"
@@ -36,6 +37,8 @@ private:
 
   std::unique_ptr<core::Menu> _menu;
   State _state;
+
+  std::shared_ptr<IDatabase> _database;
 };
 } // namespace core
 

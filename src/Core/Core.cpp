@@ -5,6 +5,7 @@
 #include "Core.hpp"
 #include "Game/Entity.hpp"
 #include "Graphic/Graphic.hpp"
+#include "Database.hpp"
 
 #include "Logger/Logger.hpp"
 
@@ -54,6 +55,10 @@ core::Core::Core(const std::string &graphicPath)
   }
   if (this->_gameTab.size() < 1 || this->_graphicalTab.size() < 1)
     throw std::runtime_error("No game or graphical lib");
+
+  _database = std::make_shared<Database>();
+  if (auto db = std::dynamic_pointer_cast<Database>(_database))
+    db->load("arcade.db");
 }
 
 void core::Core::switchGraphicalLib(Event &ev,
@@ -78,11 +83,11 @@ void core::Core::run() {
       std::make_unique<core::Menu>(this->_graphicNames, this->_gameNames);
   this->_menu->setGraphicIdx(this->_graphicLibIdx);
   this->_menu->setGameIdx(this->_gameLibIdx);
-  this->_menu->initGame();
+  this->_menu->initGame(_database);
 
   LOG_DEBUG("Graphic idx [" + std::to_string(_graphicLibIdx) + "]");
   this->_graphicalTab[_graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
-  this->_gameTab[_gameLibIdx]->initGame();
+  this->_gameTab[_gameLibIdx]->initGame(_database);
   this->_graphicalTab[_graphicLibIdx]->initGraphic(this->_menu->getEntities());
 
   auto lastTime = std::chrono::steady_clock::now();
@@ -119,13 +124,13 @@ void core::Core::run() {
         } else if (k == core::Keys::M) {
           _state = (_state == State::GAME) ? State::MENU : State::GAME;
           if (_state == State::GAME) {
-            _gameTab[_gameLibIdx]->initGame();
+            _gameTab[_gameLibIdx]->initGame(_database);
           }
           this->_graphicalTab[_graphicLibIdx]->initGraphic(
               _state == State::MENU ? _menu->getEntities()
                                     : _gameTab[_gameLibIdx]->getEntities());
         } else if (k == core::Keys::R) {
-          _gameTab[_gameLibIdx]->initGame();
+          _gameTab[_gameLibIdx]->initGame(_database);
           if (_state == State::GAME)
             this->_graphicalTab[_graphicLibIdx]->initGraphic(
                 _gameTab[_gameLibIdx]->getEntities());
@@ -151,7 +156,7 @@ void core::Core::run() {
                                                             "arcade", event);
           }
 
-          this->_gameTab[_gameLibIdx]->initGame();
+          this->_gameTab[_gameLibIdx]->initGame(_database);
           this->_graphicalTab[_graphicLibIdx]->initGraphic(
               this->_gameTab[_gameLibIdx]->getEntities());
         } else {
@@ -185,4 +190,7 @@ void core::Core::run() {
   }
   this->_graphicalTab[_graphicLibIdx]->destroyGraphic();
   this->_graphicalTab[_graphicLibIdx]->closeWindow();
+
+  if (auto db = std::dynamic_pointer_cast<Database>(_database))
+    db->save("arcade.db");
 }

@@ -16,7 +16,8 @@
 #define RIGHT 2
 #define LEFT 3
 
-void Snake::initGame() {
+void Snake::initGame(std::shared_ptr<core::IDatabase> database) {
+  this->_database = database;
   this->_entities.clear();
 
   _map = {"############################", "#                          #",

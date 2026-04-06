@@ -19,7 +19,7 @@ private:
 public:
   Menu(const std::vector<std::string> &graphics,
        const std::vector<std::string> &games);
-  void initGame() override;
+  void initGame(std::shared_ptr<core::IDatabase> database) override;
   void simulateGame(Event &ev) override;
 
   std::string getSelectedGame() const;

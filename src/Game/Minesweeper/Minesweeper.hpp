@@ -34,6 +34,6 @@ private:
   void updateCursor(Event &e);
 
 public:
-  void initGame() override;
+  void initGame(std::shared_ptr<core::IDatabase> database) override;
   void simulateGame(Event &e) override;
 };

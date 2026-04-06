@@ -4,7 +4,8 @@
 #include "Core/Utils.hpp"
 #include "Logger/Logger.hpp"
 
-void MinesweeperGame::initGame() {
+void MinesweeperGame::initGame(std::shared_ptr<core::IDatabase> database) {
+  this->_database = database;
   _map = {"11111b1000", "1b11122110", "11111b1000", "011b221000", "1222211100",
           "1b1011b200", "1110112b10", "01112b2100", "01b1121100", "011011b100"};
   _cursorPos = core::Vec2(0, 0);

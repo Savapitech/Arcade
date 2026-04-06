@@ -8,7 +8,8 @@ Menu::Menu(const std::vector<std::string> &graphics,
     : _graphicNames(graphics), _gameNames(games), _selectedGraphic(0),
       _selectedGame(0), _userName("Player") {}
 
-void Menu::initGame() {
+void Menu::initGame(std::shared_ptr<core::IDatabase> database) {
+  this->_database = database;
   this->_running = true;
   buildTexts();
 }

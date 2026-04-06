@@ -6,7 +6,8 @@
 #include "Game/Game.hpp"
 #include "Logger/Logger.hpp"
 
-void PacmanGame::initGame() {
+void PacmanGame::initGame(std::shared_ptr<core::IDatabase> database) {
+  this->_database = database;
   _map = {"############################", "#            ##            #",
           "# #### ##### ## ##### #### #", "# #  # #   # ## #   # #  # #",
           "# #### ##### ## ##### #### #", "#                          #",
@@ -615,7 +616,7 @@ void PacmanGame::simulateGame(Event &e) {
       LOG_INFO("WIN Pacman");
       resetPositions();
       _map.clear();
-      initGame();
+      initGame(this->_database);
     }
   }
 
@@ -638,7 +639,7 @@ void PacmanGame::simulateGame(Event &e) {
       LOG_INFO("WIN Pacman");
       resetPositions();
       _map.clear();
-      initGame();
+      initGame(this->_database);
     }
   }
 }

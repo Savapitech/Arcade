@@ -1,10 +1,11 @@
 #pragma once
 
-#include <vector>
+#include <memory>
 
 #include "Core/Event.hpp"
 #include "Entity.hpp"
 #include "Text.hpp"
+#include "Core/IDatabase.hpp"
 
 namespace game {
 
@@ -12,7 +13,7 @@ class IGame {
 public:
   virtual const std::vector<Entity> &getEntities() const = 0;
   virtual const std::vector<Text> &getTexts() const = 0;
-  virtual void initGame() = 0;
+  virtual void initGame(std::shared_ptr<core::IDatabase> database) = 0;
   virtual void simulateGame(Event &ev) = 0;
   virtual void stopGame() = 0;
   virtual ~IGame() = default;
@@ -24,8 +25,10 @@ protected:
   size_t _tick;
   std::vector<game::Entity> _entities;
   std::vector<game::Text> _texts;
+  std::shared_ptr<core::IDatabase> _database;
 
 public:
+  AGame() = default;
   const std::vector<game::Entity> &getEntities() const override {
     return _entities;
   }
