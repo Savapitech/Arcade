@@ -11,9 +11,11 @@ SRC_SDL2 := $(wildcard src/Graphic/SDL2/*.cpp)
 
 SRC_PACMAN := $(wildcard src/Game/Pacman/*.cpp)
 SRC_PACMAN += src/Game/Entity.cpp
+SRC_PACMAN += src/Game/Text.cpp
 
 SRC_SNAKE := $(wildcard src/Game/Snake/*.cpp)
 SRC_SNAKE += src/Game/Entity.cpp
+SRC_SNAKE += src/Game/Text.cpp
 
 BUILD_DIR := .build
 

@@ -16,6 +16,8 @@ public:
   virtual void initGame(std::shared_ptr<core::IDatabase> database) = 0;
   virtual void simulateGame(Event &ev) = 0;
   virtual void stopGame() = 0;
+  virtual const std::string &getUserName() const = 0;
+  virtual void setUserName(const std::string &name) = 0;
   virtual ~IGame() = default;
 };
 
@@ -26,6 +28,7 @@ protected:
   std::vector<game::Entity> _entities;
   std::vector<game::Text> _texts;
   std::shared_ptr<core::IDatabase> _database;
+  std::string _userName = "Player";
 
 public:
   AGame() = default;
@@ -34,5 +37,7 @@ public:
   }
   const std::vector<game::Text> &getTexts() const override { return _texts; }
   void stopGame() override { _running = false; }
+  const std::string &getUserName() const override { return _userName; }
+  void setUserName(const std::string &name) override { _userName = name; }
 };
 } // namespace game

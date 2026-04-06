@@ -12,6 +12,7 @@ struct GhostState {
 class Snake : public game::AGame {
 private:
   short int _dirState;
+  int _score = 0;
 
   core::Vec2 _fruitPos;
   std::vector<core::Vec2> _snakeTail;

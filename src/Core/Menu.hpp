@@ -12,7 +12,6 @@ private:
   std::vector<std::string> _gameNames;
   int _selectedGraphic;
   int _selectedGame;
-  std::string _userName;
 
   void buildTexts();
 

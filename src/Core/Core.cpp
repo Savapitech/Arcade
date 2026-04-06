@@ -87,6 +87,7 @@ void core::Core::run() {
 
   LOG_DEBUG("Graphic idx [" + std::to_string(_graphicLibIdx) + "]");
   this->_graphicalTab[_graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
+  this->_gameTab[_gameLibIdx]->setUserName(this->_menu->getUserName());
   this->_gameTab[_gameLibIdx]->initGame(_database);
   this->_graphicalTab[_graphicLibIdx]->initGraphic(this->_menu->getEntities());
 
@@ -124,12 +125,14 @@ void core::Core::run() {
         } else if (k == core::Keys::M) {
           _state = (_state == State::GAME) ? State::MENU : State::GAME;
           if (_state == State::GAME) {
+            _gameTab[_gameLibIdx]->setUserName(this->_menu->getUserName());
             _gameTab[_gameLibIdx]->initGame(_database);
           }
           this->_graphicalTab[_graphicLibIdx]->initGraphic(
               _state == State::MENU ? _menu->getEntities()
                                     : _gameTab[_gameLibIdx]->getEntities());
         } else if (k == core::Keys::R) {
+          _gameTab[_gameLibIdx]->setUserName(this->_menu->getUserName());
           _gameTab[_gameLibIdx]->initGame(_database);
           if (_state == State::GAME)
             this->_graphicalTab[_graphicLibIdx]->initGraphic(
@@ -156,6 +159,7 @@ void core::Core::run() {
                                                             "arcade", event);
           }
 
+          this->_gameTab[_gameLibIdx]->setUserName(this->_menu->getUserName());
           this->_gameTab[_gameLibIdx]->initGame(_database);
           this->_graphicalTab[_graphicLibIdx]->initGraphic(
               this->_gameTab[_gameLibIdx]->getEntities());

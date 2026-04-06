@@ -9,8 +9,6 @@
 
 void PacmanGame::initGame(std::shared_ptr<core::IDatabase> database) {
   this->_database = database;
-  std::cout << this->_database->getPlayerGameScore("pacman", "aa").score
-            << std::endl;
   _map = {"############################", "#            ##            #",
           "# #### ##### ## ##### #### #", "# #  # #   # ## #   # #  # #",
           "# #### ##### ## ##### #### #", "#                          #",
@@ -142,6 +140,14 @@ void PacmanGame::initGame(std::shared_ptr<core::IDatabase> database) {
       }
     }
   }
+
+  uint32_t best =
+      _database ? _database->getPlayerGameScore("pacman", _userName).score : 0;
+  _texts.clear();
+  _texts.push_back(game::Text("player", "Player: " + _userName, "", {230, 20}));
+  _texts.push_back(game::Text("score", "Score: 0", "", {530, 20}));
+  _texts.push_back(
+      game::Text("best", "Best: " + std::to_string(best), "", {800, 20}));
 }
 
 bool PacmanGame::isColliding(core::Vec2 pos) const {
@@ -627,10 +633,21 @@ void PacmanGame::simulateGame(Event &e) {
       _map[pacY][pacX] == '.') {
     _map[pacY][pacX] = ' ';
     _score += 10;
-    if ((std::uint32_t)_score >
-        _database->getPlayerGameScore("pacman", "aa").score)
-      _database->setPlayerScore("pacman", "aa", _score);
+    if (_database &&
+        (std::uint32_t)_score >
+            _database->getPlayerGameScore("pacman", _userName).score)
+      _database->setPlayerScore("pacman", _userName, _score);
     _dotsCount--;
+
+    uint32_t best =
+        _database ? _database->getPlayerGameScore("pacman", _userName).score
+                  : 0;
+    for (auto &t : _texts) {
+      if (t.getName() == "score")
+        t.setContent("Score: " + std::to_string(_score));
+      if (t.getName() == "best")
+        t.setContent("Best: " + std::to_string(best));
+    }
 
     std::string dotName =
         "dot_" + std::to_string(pacY) + "_" + std::to_string(pacX);
@@ -641,7 +658,7 @@ void PacmanGame::simulateGame(Event &e) {
       }
     }
 
-    if (_dotsCount == 0) {
+    if (_dotsCount <= 10) {
       LOG_INFO("WIN Pacman");
       resetPositions();
       _map.clear();

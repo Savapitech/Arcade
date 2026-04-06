@@ -6,7 +6,7 @@ namespace core {
 Menu::Menu(const std::vector<std::string> &graphics,
            const std::vector<std::string> &games)
     : _graphicNames(graphics), _gameNames(games), _selectedGraphic(0),
-      _selectedGame(0), _userName("Player") {}
+      _selectedGame(0) {}
 
 void Menu::initGame(std::shared_ptr<core::IDatabase> database) {
   this->_database = database;

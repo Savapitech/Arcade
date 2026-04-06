@@ -8,7 +8,7 @@ namespace game {
 class Text {
 private:
   const std::string _name;
-  const std::string _text;
+  std::string _text;
   const core::Vec2 _startPos;
   core::Vec2 _pos;
 
@@ -22,6 +22,7 @@ public:
   float getStartY() const { return _startPos.y; }
   const std::string getName() const { return _name; }
   const std::string getText() const { return _text; }
+  void setContent(const std::string &content) { _text = content; }
   void setX(float x) { _pos.x = x; }
   void setY(float y) { _pos.y = y; }
   void setPos(float x, float y) {

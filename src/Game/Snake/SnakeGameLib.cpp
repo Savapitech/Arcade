@@ -4,9 +4,7 @@
 #include "Core/Utils.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Game.hpp"
-#include "Logger/Logger.hpp"
 #include "SnakeGameLib.hpp"
-#include <iostream>
 
 #define SNAKE 0
 #define FRUIT 1
@@ -65,6 +63,17 @@ void Snake::initGame(std::shared_ptr<core::IDatabase> database) {
     tailSegment.setHidden(true);
     this->_entities.push_back(tailSegment);
   }
+
+  _score = 0;
+  _snakeTail.clear();
+  _dirState = RIGHT;
+  uint32_t best =
+      _database ? _database->getPlayerGameScore("snake", _userName).score : 0;
+  _texts.clear();
+  _texts.push_back(game::Text("player", "Player: " + _userName, "", {230, 45}));
+  _texts.push_back(game::Text("score", "Score: 0", "", {430, 45}));
+  _texts.push_back(
+      game::Text("best", "Best: " + std::to_string(best), "", {630, 45}));
 }
 void Snake::simulateGame(Event &e) {
 
@@ -178,6 +187,21 @@ void Snake::spawnFruit() {
     }
   }
   _entities[FRUIT].setPos(core::Vec2(newX, newY));
+
+  _score += 10;
+  if (_database && (std::uint32_t)_score >
+                       _database->getPlayerGameScore("snake", _userName).score)
+    _database->setPlayerScore("snake", _userName, _score);
+  for (auto &t : _texts) {
+    if (t.getName() == "score")
+      t.setContent("Score: " + std::to_string(_score));
+    if (t.getName() == "best") {
+      uint32_t best =
+          _database ? _database->getPlayerGameScore("snake", _userName).score
+                    : 0;
+      t.setContent("Best: " + std::to_string(best));
+    }
+  }
 
   core::Vec2 newTailPos;
   if (this->_snakeTail.empty())
