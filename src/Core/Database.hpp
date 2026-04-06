@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <vector>
 
-#include "Models.hpp"
 #include "IDatabase.hpp"
+#include "Models.hpp"
 
 namespace core {
 class Database : public IDatabase {

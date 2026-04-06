@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "Core/Event.hpp"
+#include "Core/IDatabase.hpp"
 #include "Entity.hpp"
 #include "Text.hpp"
-#include "Core/IDatabase.hpp"
 
 namespace game {
 

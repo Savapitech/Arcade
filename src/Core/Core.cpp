@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "Core.hpp"
+#include "Database.hpp"
 #include "Game/Entity.hpp"
 #include "Graphic/Graphic.hpp"
-#include "Database.hpp"
 
 #include "Logger/Logger.hpp"
 
