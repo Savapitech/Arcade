@@ -59,8 +59,17 @@ void Database::load(const std::string &filename) {
   LOG_DEBUG("Database size [" + std::to_string(_scores.size()) + "]");
 }
 
-void Database::addPlayerScore(std::string gameName, std::string playerName,
+void Database::setPlayerScore(std::string gameName, std::string playerName,
                               std::uint32_t score) {
+
+  for (Score &playerScore : _scores) {
+    if (playerScore.gameName == gameName &&
+        playerScore.playerName == playerName) {
+      playerScore.score = score;
+      return;
+    }
+  }
+
   Score newScore;
 
   strcpy(newScore.gameName, gameName.c_str());
@@ -70,13 +79,13 @@ void Database::addPlayerScore(std::string gameName, std::string playerName,
   _scores.push_back(newScore);
 }
 
-std::uint32_t Database::getPlayerGameScore(std::string gameName,
-                                           std::string playerName) const {
+Score Database::getPlayerGameScore(std::string gameName,
+                                   std::string playerName) const {
   for (Score score : _scores)
     if (score.gameName == gameName && score.playerName == playerName)
-      return score.score;
+      return score;
 
-  return 0;
+  return {.gameName = "Error", .playerName = "Error"};
 }
 
 std::vector<Score> Database::getPlayerScores(std::string playerName) const {

@@ -5,9 +5,12 @@
 #include "Game/Entity.hpp"
 #include "Game/Game.hpp"
 #include "Logger/Logger.hpp"
+#include <cstdint>
 
 void PacmanGame::initGame(std::shared_ptr<core::IDatabase> database) {
   this->_database = database;
+  std::cout << this->_database->getPlayerGameScore("pacman", "aa").score
+            << std::endl;
   _map = {"############################", "#            ##            #",
           "# #### ##### ## ##### #### #", "# #  # #   # ## #   # #  # #",
           "# #### ##### ## ##### #### #", "#                          #",
@@ -624,6 +627,9 @@ void PacmanGame::simulateGame(Event &e) {
       _map[pacY][pacX] == '.') {
     _map[pacY][pacX] = ' ';
     _score += 10;
+    if ((std::uint32_t)_score >
+        _database->getPlayerGameScore("pacman", "aa").score)
+      _database->setPlayerScore("pacman", "aa", _score);
     _dotsCount--;
 
     std::string dotName =

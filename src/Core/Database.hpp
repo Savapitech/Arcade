@@ -18,10 +18,10 @@ public:
   void load(const std::string &filename);
   void save(const std::string &filename) const;
 
-  void addPlayerScore(std::string playerName, std::string gameName,
+  void setPlayerScore(std::string gameName, std::string playerName,
                       std::uint32_t score) override;
-  std::uint32_t getPlayerGameScore(std::string playerName,
-                                   std::string gameName) const override;
+  Score getPlayerGameScore(std::string gameName,
+                           std::string playerName) const override;
   std::vector<Score> getPlayerScores(std::string playerName) const override;
   std::vector<Score> getGameScores(std::string gameName) const override;
 };
