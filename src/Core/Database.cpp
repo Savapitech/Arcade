@@ -85,7 +85,7 @@ Score Database::getPlayerGameScore(std::string gameName,
     if (score.gameName == gameName && score.playerName == playerName)
       return score;
 
-  return {.gameName = "Error", .playerName = "Error"};
+  return {.gameName = "Error", .playerName = "Error", .score = 0};
 }
 
 std::vector<Score> Database::getPlayerScores(std::string playerName) const {
