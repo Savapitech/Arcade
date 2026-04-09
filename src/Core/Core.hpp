@@ -6,9 +6,9 @@
 #include "Core/Database.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Game.hpp"
+#include "Game/IMenu.hpp"
 #include "Graphic/Graphic.hpp"
 #include "Loader.hpp"
-#include "Menu.hpp"
 
 #define TIME_PER_TICK 50.0
 #define TIME_PER_TICK_GRAPHIC 16.67
@@ -22,6 +22,7 @@ public:
   ~Core() = default;
   void setSprite(const std::vector<game::Entity> &);
   void switchGraphicalLib(Event &ev, const std::vector<game::Entity> &entities);
+  void switchGameLib(Event &ev, const std::vector<game::Entity> &entities);
   void run();
 
 private:
@@ -35,7 +36,7 @@ private:
   std::vector<std::string> _gameNames;
   int _gameLibIdx;
 
-  std::unique_ptr<core::Menu> _menu;
+  game::IMenu *_menu;
   State _state;
 
   std::shared_ptr<IDatabase> _database;

@@ -17,6 +17,10 @@ SRC_SNAKE := $(wildcard src/Game/Snake/*.cpp)
 SRC_SNAKE += src/Game/Entity.cpp
 SRC_SNAKE += src/Game/Text.cpp
 
+SRC_MENU := $(wildcard src/Game/Menu/*.cpp)
+SRC_MENU += src/Game/Entity.cpp
+SRC_MENU += src/Game/Text.cpp
+
 BUILD_DIR := .build
 
 CXXFLAGS += -Wall -Wextra -Werror=write-strings -g
@@ -63,10 +67,11 @@ $(eval $(call mk-profile, ncurses, SRC_NCURSES, $(NCURSES_LDFLAGS) -shared -fPIC
 $(eval $(call mk-profile, sdl2, SRC_SDL2, $(SDL2_LDFLAGS) -shared -fPIC, lib/arcade_sdl2.so))
 $(eval $(call mk-profile, pacman, SRC_PACMAN, -shared -fPIC, lib/arcade_pacman.so))
 $(eval $(call mk-profile, snake, SRC_SNAKE, -shared -fPIC, lib/arcade_snake.so))
+$(eval $(call mk-profile, menu, SRC_MENU, -shared -fPIC, lib/arcade_menu.so))
 
 core: $(NAME_core)
 
-games: $(NAME_pacman) $(NAME_snake)
+games: $(NAME_pacman) $(NAME_snake) $(NAME_menu)
 
 graphicals: $(NAME_sfml) $(NAME_ncurses) $(NAME_sdl2)
 

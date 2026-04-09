@@ -4,6 +4,7 @@
 
 #include "Core.hpp"
 #include "Database.hpp"
+#include "Exceptions.hpp"
 #include "Game/Entity.hpp"
 #include "Graphic/Graphic.hpp"
 
@@ -14,13 +15,13 @@
 namespace fs = std::filesystem;
 
 core::Core::Core(const std::string &graphicPath)
-    : _graphicLibIdx(0), _gameLibIdx(0) {
+    : _graphicLibIdx(0), _gameLibIdx(0), _menu(nullptr) {
   std::string path = "./lib/";
   int libIdx = 0;
 
   for (const auto &entry : fs::directory_iterator(path)) {
     if (entry.path().extension() != ".so")
-      throw std::runtime_error("Failed while loading lib");
+      continue;
 
     if (entry.path().string().find(graphicPath) != std::string::npos) {
       LOG_DEBUG("First Lib:[" + entry.path().string() + " == " + graphicPath +
@@ -34,7 +35,7 @@ core::Core::Core(const std::string &graphicPath)
       std::unique_ptr<graphic::IGraphic> graphical =
           _graphicLoader.back()->getInstance("graphicEntryPoint");
       if (graphical == nullptr)
-        throw std::runtime_error("Failed while loading lib");
+        throw LoadException("Failed while loading lib");
       this->_graphicalTab.push_back(std::move(graphical));
       this->_graphicNames.push_back(entry.path().filename().string());
       LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
@@ -49,12 +50,17 @@ core::Core::Core(const std::string &graphicPath)
         this->_gameNames.push_back(entry.path().filename().string());
         LOG_DEBUG("Loaded lib [" + entry.path().string() + "]");
       } catch (const std::exception &e) {
-        throw std::runtime_error("Failed while loading lib");
+        throw LoadException("Failed while loading lib: " +
+                            std::string(e.what()));
       }
     }
   }
   if (this->_gameTab.size() < 1 || this->_graphicalTab.size() < 1)
-    throw std::runtime_error("No game or graphical lib");
+    throw LibraryNotFoundException("No game or graphical lib");
+
+  for (size_t i = 0; i < _gameTab.size(); i++)
+    if (_gameNames[i].find("arcade_menu.so") != std::string::npos)
+      _menu = dynamic_cast<game::IMenu *>(_gameTab[i].get());
 
   _database = std::make_shared<Database>();
   if (auto db = std::dynamic_pointer_cast<Database>(_database))
@@ -76,20 +82,64 @@ void core::Core::switchGraphicalLib(Event &ev,
   this->_graphicalTab[_graphicLibIdx]->initGraphic(entities);
 }
 
+void core::Core::switchGameLib(Event &ev,
+                               const std::vector<game::Entity> &entities) {
+  if (utils::containsKey(ev.getKeyStack(), core::Keys::N) == false)
+    return;
+
+  do {
+    _gameLibIdx = (_gameLibIdx + 1) % this->_gameTab.size();
+  } while (_gameNames[_gameLibIdx].find("arcade_menu.so") != std::string::npos);
+
+  auto menuGame = dynamic_cast<game::IGame *>(_menu);
+  _gameTab[_gameLibIdx]->setUserName(menuGame ? menuGame->getUserName()
+                                              : "Player");
+  _gameTab[_gameLibIdx]->initGame(_database);
+  this->_graphicalTab[_graphicLibIdx]->initGraphic(
+      this->_gameTab[_gameLibIdx]->getEntities());
+}
+
 void core::Core::run() {
   Event event;
   this->_state = State::MENU;
-  this->_menu =
-      std::make_unique<core::Menu>(this->_graphicNames, this->_gameNames);
+  if (!_menu) {
+    throw GameNotFoundException(
+        "No menu library found (missing arcade_menu.so)");
+  }
+
+  std::vector<std::string> validGameNames;
+  for (const auto &name : this->_gameNames) {
+    if (name.find("arcade_menu.so") == std::string::npos) {
+      validGameNames.push_back(name);
+    }
+  }
+
+  this->_menu->setGraphicNames(this->_graphicNames);
+  this->_menu->setGameNames(validGameNames);
   this->_menu->setGraphicIdx(this->_graphicLibIdx);
-  this->_menu->setGameIdx(this->_gameLibIdx);
-  this->_menu->initGame(_database);
+  this->_menu->setGameIdx(0);
+
+  auto menuGame = dynamic_cast<game::IGame *>(this->_menu);
+  if (menuGame)
+    menuGame->initGame(_database);
 
   LOG_DEBUG("Graphic idx [" + std::to_string(_graphicLibIdx) + "]");
   this->_graphicalTab[_graphicLibIdx]->openWindow(1920, 1080, "arcade", event);
-  this->_gameTab[_gameLibIdx]->setUserName(this->_menu->getUserName());
+
+  _gameLibIdx = 0;
+  while (_gameLibIdx < (int)_gameNames.size() &&
+         _gameNames[_gameLibIdx].find("arcade_menu.so") != std::string::npos) {
+    _gameLibIdx++;
+  }
+  if (_gameLibIdx >= (int)_gameNames.size())
+    _gameLibIdx = 0;
+
+  this->_gameTab[_gameLibIdx]->setUserName(menuGame ? menuGame->getUserName()
+                                                    : "Player");
   this->_gameTab[_gameLibIdx]->initGame(_database);
-  this->_graphicalTab[_graphicLibIdx]->initGraphic(this->_menu->getEntities());
+  this->_graphicalTab[_graphicLibIdx]->initGraphic(
+      menuGame ? menuGame->getEntities()
+               : this->_gameTab[_gameLibIdx]->getEntities());
 
   auto lastTime = std::chrono::steady_clock::now();
   auto timeSinceLastUpdate = std::chrono::duration<double, std::milli>::zero();
@@ -125,14 +175,16 @@ void core::Core::run() {
         } else if (k == core::Keys::M) {
           _state = (_state == State::GAME) ? State::MENU : State::GAME;
           if (_state == State::GAME) {
-            _gameTab[_gameLibIdx]->setUserName(this->_menu->getUserName());
+            _gameTab[_gameLibIdx]->setUserName(
+                menuGame ? menuGame->getUserName() : "Player");
             _gameTab[_gameLibIdx]->initGame(_database);
           }
           this->_graphicalTab[_graphicLibIdx]->initGraphic(
-              _state == State::MENU ? _menu->getEntities()
+              _state == State::MENU ? menuGame->getEntities()
                                     : _gameTab[_gameLibIdx]->getEntities());
         } else if (k == core::Keys::R) {
-          _gameTab[_gameLibIdx]->setUserName(this->_menu->getUserName());
+          _gameTab[_gameLibIdx]->setUserName(menuGame ? menuGame->getUserName()
+                                                      : "Player");
           _gameTab[_gameLibIdx]->initGame(_database);
           if (_state == State::GAME)
             this->_graphicalTab[_graphicLibIdx]->initGraphic(
@@ -159,7 +211,8 @@ void core::Core::run() {
                                                             "arcade", event);
           }
 
-          this->_gameTab[_gameLibIdx]->setUserName(this->_menu->getUserName());
+          this->_gameTab[_gameLibIdx]->setUserName(
+              menuGame ? menuGame->getUserName() : "Player");
           this->_gameTab[_gameLibIdx]->initGame(_database);
           this->_graphicalTab[_graphicLibIdx]->initGraphic(
               this->_gameTab[_gameLibIdx]->getEntities());
@@ -168,14 +221,16 @@ void core::Core::run() {
         }
       }
 
-      if (_state == State::MENU) {
-        this->_menu->simulateGame(event);
-      } else {
+      if (_state == State::MENU)
+        menuGame->simulateGame(event);
+      else
         this->_gameTab[_gameLibIdx]->simulateGame(event);
-      }
 
+      this->switchGameLib(event, _state == State::MENU
+                                     ? menuGame->getEntities()
+                                     : _gameTab[_gameLibIdx]->getEntities());
       this->switchGraphicalLib(
-          event, _state == State::MENU ? _menu->getEntities()
+          event, _state == State::MENU ? menuGame->getEntities()
                                        : _gameTab[_gameLibIdx]->getEntities());
     }
 
@@ -183,8 +238,8 @@ void core::Core::run() {
       timeSinceLastUpdateGraphic -= timePerTickGraphic;
 
       if (_state == State::MENU) {
-        this->_graphicalTab[_graphicLibIdx]->drawEntities(_menu->getEntities(),
-                                                          _menu->getTexts());
+        this->_graphicalTab[_graphicLibIdx]->drawEntities(
+            menuGame->getEntities(), menuGame->getTexts());
       } else {
         this->_graphicalTab[_graphicLibIdx]->drawEntities(
             _gameTab[_gameLibIdx]->getEntities(),

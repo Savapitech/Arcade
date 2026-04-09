@@ -1,12 +1,16 @@
 #include "Menu.hpp"
 #include "Core/Keys.hpp"
 
-namespace core {
+namespace game {
 
-Menu::Menu(const std::vector<std::string> &graphics,
-           const std::vector<std::string> &games)
-    : _graphicNames(graphics), _gameNames(games), _selectedGraphic(0),
-      _selectedGame(0) {}
+Menu::Menu() : _selectedGraphic(0), _selectedGame(0) {}
+
+void Menu::setGraphicNames(const std::vector<std::string> &names) {
+  _graphicNames = names;
+}
+void Menu::setGameNames(const std::vector<std::string> &names) {
+  _gameNames = names;
+}
 
 void Menu::initGame(std::shared_ptr<core::IDatabase> database) {
   this->_database = database;
@@ -57,9 +61,8 @@ void Menu::simulateGame(Event &ev) {
     } else if (key == core::Keys::Num2 || key == core::Keys::S) {
       if (_selectedGame < (int)_gameNames.size() - 1)
         _selectedGame++;
-    } else {
+    } else
       filter.push(key);
-    }
   }
 
   while (!filter.empty()) {
@@ -85,4 +88,6 @@ std::string Menu::getSelectedGraphic() const {
 void Menu::setGraphicIdx(int idx) { _selectedGraphic = idx; }
 void Menu::setGameIdx(int idx) { _selectedGame = idx; }
 
-} // namespace core
+} // namespace game
+
+extern "C" game::IGame *gameEntryPoint() { return new game::Menu(); }
