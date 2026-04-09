@@ -30,6 +30,8 @@
             pkg-config
             SDL2
             SDL2_image
+            SDL2_ttf
+            clang
           ] else [
             libcxx
           ]) ++ [
