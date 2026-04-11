@@ -67,6 +67,13 @@ void Snake::initGame(std::shared_ptr<core::IDatabase> database) {
   _score = 0;
   _snakeTail.clear();
   _dirState = RIGHT;
+
+  this->_snakeTail.push_back(core::Vec2(242.0f, 90.0f));
+  this->_snakeTail.push_back(core::Vec2(234.0f, 90.0f));
+  this->_snakeTail.push_back(core::Vec2(226.0f, 90.0f));
+
+  this->updateSnakeTail();
+
   uint32_t best =
       _database ? _database->getPlayerGameScore("snake", _userName).score : 0;
   _texts.clear();
@@ -75,22 +82,23 @@ void Snake::initGame(std::shared_ptr<core::IDatabase> database) {
   _texts.push_back(
       game::Text("best", "Best: " + std::to_string(best), "", {630, 45}));
 }
+
 void Snake::simulateGame(Event &e) {
 
   std::stack<core::Keys> keys = e.getKeyStack();
+
   if (keys.empty()) {
     handleSnake(core::Keys::L);
-    return;
-  }
+  } else {
+    bool use = false;
 
-  bool use = false;
-
-  while (!keys.empty()) {
-    core::Keys currentKey = keys.top();
-    keys.pop();
-    if (use == false)
-      this->handleSnake(currentKey);
-    use = true;
+    while (!keys.empty()) {
+      core::Keys currentKey = keys.top();
+      keys.pop();
+      if (use == false)
+        this->handleSnake(currentKey);
+      use = true;
+    }
   }
   this->spawnFruit();
 }
@@ -102,16 +110,24 @@ void Snake::handleSnake(core::Keys key) {
   float speed = 8.0f;
   switch (key) {
   case core::Keys::Z:
-    this->_dirState = UP;
+    if (this->_dirState != DOWN) {
+      this->_dirState = UP;
+    }
     break;
   case core::Keys::S:
-    this->_dirState = DOWN;
+    if (this->_dirState != UP) {
+      this->_dirState = DOWN;
+    }
     break;
   case core::Keys::Q:
-    this->_dirState = LEFT;
+    if (this->_dirState != RIGHT) {
+      this->_dirState = LEFT;
+    }
     break;
   case core::Keys::D:
-    this->_dirState = RIGHT;
+    if (this->_dirState != LEFT) {
+      this->_dirState = RIGHT;
+    }
     break;
   default:
     break;
@@ -138,6 +154,9 @@ void Snake::handleSnake(core::Keys key) {
     this->_dirState = RIGHT;
     this->_entities[SNAKE].setPos(core::Vec2(250, 90));
     this->_snakeTail.clear();
+    this->_snakeTail.push_back(core::Vec2(242.0f, 90.0f));
+    this->_snakeTail.push_back(core::Vec2(234.0f, 90.0f));
+    this->_snakeTail.push_back(core::Vec2(226.0f, 90.0f));
   } else {
     this->_entities[SNAKE].setPos(pos);
     if (!this->_snakeTail.empty()) {
@@ -152,9 +171,9 @@ void Snake::handleSnake(core::Keys key) {
 
 void Snake::spawnFruit() {
   if (!(std::abs(_entities[SNAKE].getPos().x - _entities[FRUIT].getPos().x) <=
-            20.f &&
+            4.f &&
         std::abs(_entities[SNAKE].getPos().y - _entities[FRUIT].getPos().y) <=
-            20.f))
+            4.f))
     return;
 
   bool positionValide = false;
