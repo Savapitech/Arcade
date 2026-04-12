@@ -256,13 +256,13 @@ void PacmanGame::resetPositions() {
   _currentDir = core::Keys::Space;
 
   _entities[2].setPath(_entities[2].getBasePath());
-  _entities[2].setPos({346, 178}); // Red Ghost
+  _entities[2].setPos({340, 190}); // Red Ghost
   _entities[3].setPath(_entities[3].getBasePath());
   _entities[3].setPos({330, 186}); // Blue Ghost
   _entities[4].setPath(_entities[4].getBasePath());
-  _entities[4].setPos({346, 186}); // Orange Ghost
+  _entities[4].setPos({340, 186}); // Orange Ghost
   _entities[5].setPath(_entities[5].getBasePath());
-  _entities[5].setPos({330, 178}); // Pink Ghost
+  _entities[5].setPos({340, 178}); // Pink Ghost
 
   _ghosts[0].currentDir = core::Keys::Z;
   _ghosts[0].living = true;
