@@ -27,13 +27,15 @@ public:
 
 private:
   std::vector<std::unique_ptr<DLLoader<graphic::IGraphic>>> _graphicLoader;
-  std::vector<std::unique_ptr<graphic::IGraphic>> _graphicalTab;
-  std::vector<std::string> _graphicNames;
-  int _graphicLibIdx;
-
   std::vector<std::unique_ptr<DLLoader<game::IGame>>> _gameLoader;
-  std::vector<std::unique_ptr<game::IGame>> _gameTab;
+
+  std::vector<std::string> _graphicNames;
   std::vector<std::string> _gameNames;
+
+  std::vector<std::unique_ptr<graphic::IGraphic>> _graphicalTab;
+  std::vector<std::unique_ptr<game::IGame>> _gameTab;
+
+  int _graphicLibIdx;
   int _gameLibIdx;
 
   game::IMenu *_menu;
